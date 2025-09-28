@@ -1,7 +1,7 @@
 import type {JSX} from "react";
 import Drawer from "@mui/material/Drawer";
-import SideDrawer from "../SideDrawer/SideDrawer.tsx";
 import Box from "@mui/material/Box";
+import {SideDrawer} from "./SideDrawer";
 
 interface Props {
     drawerWidth: number,

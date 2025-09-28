@@ -1,11 +1,11 @@
 import './App.css'
-import Layout from "./layout/Layout.tsx";
+import {LayoutContainer} from "./layout";
 
 function App() {
 
   return (
     <>
-        <Layout/>
+        <LayoutContainer/>
     </>
   )
 }
