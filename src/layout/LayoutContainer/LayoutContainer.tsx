@@ -1,10 +1,28 @@
-import { useState } from "react";
+import {type JSX, type ReactNode, useState, useEffect} from "react";
 import {LayoutView} from "../LayoutView";
+import {useLocation, type Location} from "react-router-dom";
+import {type appRoute, appRoutes} from "../../routes.tsx";
 
-export default function LayoutContainer() {
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const [isClosing, setIsClosing] = useState(false);
-    const [topBarLabel, setTopBarLabel] = useState("Personal Suite");
+interface Props {
+    children: ReactNode;
+}
+
+export default function LayoutContainer({children}: Props): JSX.Element {
+    const location: Location = useLocation();
+    const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+    const [isClosing, setIsClosing] = useState<boolean>(false);
+    const [topBarLabel, setTopBarLabel] = useState<string>("Personal Suite");
+
+    useEffect((): void => {
+        const currentRoute: appRoute | undefined = appRoutes.find(
+            (route: appRoute): boolean => route.path === location.pathname
+        );
+        if (currentRoute) {
+            setTopBarLabel(currentRoute.label);
+        } else {
+            setTopBarLabel("Personal Suite"); // fallback
+        }
+    }, [location.pathname]);
 
     const handleDrawerClose = (): void => {
         setIsClosing(true);
@@ -29,6 +47,8 @@ export default function LayoutContainer() {
             onToggleDrawer={handleDrawerToggle}
             onDrawerClose={handleDrawerClose}
             onDrawerTransitionEnd={handleDrawerTransitionEnd}
-        />
+        >
+            {children}
+        </LayoutView>
     );
 }

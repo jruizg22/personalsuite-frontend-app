@@ -1,10 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import {createRoot} from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {LayoutContainer} from "./layout";
+import {appRoutes} from "./routes.tsx";
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+    <BrowserRouter>
+        <LayoutContainer>
+            <Routes>
+                <Route>
+                    <Route index element={<Navigate to="/main" replace/>}/>
+                    {appRoutes.map(({path, element}) => (
+                        <Route key={path} path={path} element={element}/>
+                    ))}
+                </Route>
+            </Routes>
+        </LayoutContainer>
+    </BrowserRouter>
 )

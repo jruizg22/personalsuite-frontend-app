@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import {type JSX, type ReactNode} from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import {TopBar} from "../TopBar";
@@ -12,6 +12,7 @@ interface Props {
     onToggleDrawer: () => void;
     onDrawerClose: () => void;
     onDrawerTransitionEnd: () => void;
+    children: ReactNode;
 }
 
 export default function LayoutView({
@@ -21,6 +22,7 @@ export default function LayoutView({
                                        onToggleDrawer,
                                        onDrawerClose,
                                        onDrawerTransitionEnd,
+                                       children
                                    }: Props): JSX.Element {
     return (
         <Box sx={{ display: "flex" }}>
@@ -36,7 +38,9 @@ export default function LayoutView({
                 handleDrawerClose={onDrawerClose}
                 handleDrawerTransitionEnd={onDrawerTransitionEnd}
             />
-            <Content drawerWidth={drawerWidth} />
+            <Content drawerWidth={drawerWidth}>
+                {children}
+            </Content>
         </Box>
     );
 }
