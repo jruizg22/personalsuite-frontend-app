@@ -1,10 +1,9 @@
 import type {JSX} from "react";
-import {MainPage} from "./pages/MainPage";
+import {lazy, Suspense} from "react";
 import HomeIcon from "@mui/icons-material/Home";
-import MediaTrackerLayout from "./modules/media-tracker/MediaTrackerLayout/MediaTrackerLayout.tsx";
-import MovieIcon from "@mui/icons-material/Movie";
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import YouTubeIcon from "@mui/icons-material/YouTube";
+import {mediaRoutes} from "./modules/media-tracker/media-tracker-routes.tsx";
+
+const MainPage = lazy(() => import("./pages/MainPage/MainPage"))
 
 export interface appRoute {
     path: string;
@@ -17,27 +16,13 @@ export interface appRoute {
 export const appRoutes: appRoute[] = [
     {
         path: "/main",
-        element: <MainPage/>,
+        element: (
+            <Suspense fallback={<div>Loading...</div>}>
+                <MainPage/>
+            </Suspense>
+        ),
         label: "Main Page",
         icon: <HomeIcon/>
     },
-    {
-        path: "/media-tracker",
-        label: "Media Tracker",
-        icon: <MovieIcon/>,
-        children: [
-            {
-                path: "/media-tracker/media",
-                element: <MediaTrackerLayout/>,
-                label: "Media",
-                icon: <PlayCircleIcon/>
-            },
-            {
-                path: "/media-tracker/youtube",
-                element: <MediaTrackerLayout/>,
-                label: "YouTube",
-                icon: <YouTubeIcon/>
-            }
-        ]
-    }
+    ...mediaRoutes
 ]
