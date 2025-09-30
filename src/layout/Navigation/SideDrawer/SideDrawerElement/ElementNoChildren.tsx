@@ -9,9 +9,10 @@ import type {appRoute} from "../../../../routes.tsx";
 interface Props {
     route: appRoute;
     isChild?: boolean;
+    handleItemClick?: () => void;
 }
 
-export default function ElementNoChildren({route, isChild}: Props): JSX.Element {
+export default function ElementNoChildren({route, isChild, handleItemClick}: Props): JSX.Element {
     const { path, label, icon }: appRoute = route;
 
     return (
@@ -19,6 +20,7 @@ export default function ElementNoChildren({route, isChild}: Props): JSX.Element 
             <ListItemButton
                 component={NavLink}
                 to={path}
+                onClick={handleItemClick}
                 sx={{
                     pl: isChild ? 6 : 2,
                     "&.active": { backgroundColor: "rgba(0,0,0,0.08)" }

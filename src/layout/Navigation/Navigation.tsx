@@ -33,7 +33,7 @@ export default function Navigation({drawerWidth, mobileOpen, handleDrawerClose, 
                     },
                 }}
             >
-                <SideDrawer/>
+                <SideDrawer handleItemClick={handleDrawerClose}/>
             </Drawer>
             <Drawer
                 variant="permanent"

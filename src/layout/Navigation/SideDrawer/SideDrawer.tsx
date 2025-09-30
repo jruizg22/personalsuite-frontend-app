@@ -5,14 +5,18 @@ import SideDrawerElement from "./SideDrawerElement/SideDrawerElement.tsx";
 import {Divider} from "@mui/material";
 import SideDrawerHeader from "./SideDrawerHeader.tsx";
 
-export default function SideDrawer(): JSX.Element {
+interface Props {
+    handleItemClick?: () => void;
+}
+
+export default function SideDrawer({handleItemClick}: Props): JSX.Element {
     return (
         <>
             <SideDrawerHeader/>
             <Divider/>
             <List>
                 {appRoutes.map((route: appRoute): JSX.Element => (
-                    <SideDrawerElement key={route.path} route={route} />
+                    <SideDrawerElement key={route.path} route={route} handleItemClick={handleItemClick}/>
                 ))}
             </List>
         </>
