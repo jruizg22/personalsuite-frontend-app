@@ -8,21 +8,38 @@ interface Props {
 }
 
 export default function LayoutContainer({children}: Props): JSX.Element {
-    const location: Location = useLocation();
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
     const [isClosing, setIsClosing] = useState<boolean>(false);
-    const [topBarLabel, setTopBarLabel] = useState<string>("Personal Suite");
 
-    useEffect((): void => {
-        const currentRoute: appRoute | undefined = appRoutes.find(
-            (route: appRoute): boolean => route.path === location.pathname
-        );
-        if (currentRoute) {
-            setTopBarLabel(currentRoute.label);
-        } else {
-            setTopBarLabel("Personal Suite"); // fallback
+    function findRouteTrail(routes: appRoute[], path: string, trail: appRoute[] = []): appRoute[] | null {
+        for (const route of routes) {
+            if (route.path === path) return [...trail, route];
+            if (route.children) {
+                const childTrail: appRoute[] | null = findRouteTrail(route.children, path, [...trail, route]);
+                if (childTrail) return childTrail;
+            }
         }
-    }, [location.pathname]);
+        return null;
+    }
+
+        function useTopBarLabel(): string {
+        const location: Location = useLocation();
+        const [topBarLabel, setTopBarLabel] = useState<string>("Personal Suite");
+
+        useEffect((): void => {
+            const routeTrail: appRoute[] | null = findRouteTrail(appRoutes, location.pathname);
+            if (routeTrail) {
+                const label: string = routeTrail.map(r => r.label).join(" / ");
+                setTopBarLabel(label);
+            } else {
+                setTopBarLabel("Personal Suite");
+            }
+        }, [location.pathname]);
+
+        return topBarLabel;
+    }
+
+    const topBarLabel: string = useTopBarLabel();
 
     const handleDrawerClose = (): void => {
         setIsClosing(true);

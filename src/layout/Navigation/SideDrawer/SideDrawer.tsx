@@ -1,7 +1,7 @@
 import type {JSX} from "react";
 import {type appRoute, appRoutes} from "../../../routes.tsx";
 import List from "@mui/material/List";
-import RouteItem from "./RouteItem.tsx";
+import SideDrawerElement from "./SideDrawerElement/SideDrawerElement.tsx";
 import {Divider} from "@mui/material";
 import SideDrawerHeader from "./SideDrawerHeader.tsx";
 
@@ -12,7 +12,7 @@ export default function SideDrawer(): JSX.Element {
             <Divider/>
             <List>
                 {appRoutes.map((route: appRoute): JSX.Element => (
-                    <RouteItem key={route.path} route={route} />
+                    <SideDrawerElement key={route.path} route={route} />
                 ))}
             </List>
         </>

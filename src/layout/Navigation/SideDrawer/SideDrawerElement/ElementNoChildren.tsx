@@ -1,0 +1,36 @@
+import type {JSX} from "react";
+import ListItemButton from "@mui/material/ListItemButton";
+import {NavLink} from "react-router-dom";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import ListItem from "@mui/material/ListItem";
+import type {appRoute} from "../../../../routes.tsx";
+
+interface Props {
+    route: appRoute;
+    isChild?: boolean;
+}
+
+export default function ElementNoChildren({route, isChild}: Props): JSX.Element {
+    const { path, label, icon }: appRoute = route;
+
+    return (
+        <ListItem disablePadding>
+            <ListItemButton
+                component={NavLink}
+                to={path}
+                sx={{
+                    pl: isChild ? 6 : 2,
+                    "&.active": { backgroundColor: "rgba(0,0,0,0.08)" }
+                }}
+            >
+                {icon && (
+                    <ListItemIcon sx={{ minWidth: 32 }}>
+                        {icon}
+                    </ListItemIcon>
+                )}
+                <ListItemText primary={label} />
+            </ListItemButton>
+        </ListItem>
+    )
+}
