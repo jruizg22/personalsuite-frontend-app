@@ -2,6 +2,7 @@ import {type JSX, type ReactNode, useState, useEffect} from "react";
 import {LayoutView} from "../LayoutView";
 import {useLocation, type Location} from "react-router-dom";
 import {type appRoute, appRoutes} from "../../routes.tsx";
+import {useLanguageService} from "../../services/useLanguageService.ts";
 
 interface Props {
     children: ReactNode;
@@ -11,7 +12,11 @@ export default function LayoutContainer({children}: Props): JSX.Element {
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
     const [isClosing, setIsClosing] = useState<boolean>(false);
 
-    function findRouteTrail(routes: appRoute[], path: string, trail: appRoute[] = []): appRoute[] | null {
+    function findRouteTrail(
+        routes: appRoute[],
+        path: string,
+        trail: appRoute[] = []
+    ): appRoute[] | null {
         for (const route of routes) {
             if (route.path === path) return [...trail, route];
             if (route.children) {
@@ -22,15 +27,16 @@ export default function LayoutContainer({children}: Props): JSX.Element {
         return null;
     }
 
-        function useTopBarLabel(): string {
+    function useTopBarLabel(): string {
         const location: Location = useLocation();
         const [topBarLabel, setTopBarLabel] = useState<string>("Personal Suite");
+        const { translateRouteLabel } = useLanguageService();
 
         useEffect((): void => {
             const routeTrail: appRoute[] | null = findRouteTrail(appRoutes, location.pathname);
             if (routeTrail) {
-                const label: string = routeTrail.map(r => r.label).join(" / ");
-                setTopBarLabel(label);
+                const translatedLabels: string[] = routeTrail.map(route => translateRouteLabel(route));
+                setTopBarLabel(translatedLabels.join(" / "));
             } else {
                 setTopBarLabel("Personal Suite");
             }

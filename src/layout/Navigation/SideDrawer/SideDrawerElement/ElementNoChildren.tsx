@@ -5,6 +5,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListItem from "@mui/material/ListItem";
 import type {appRoute} from "../../../../routes.tsx";
+import {useLanguageService} from "../../../../services/useLanguageService.ts";
 
 interface Props {
     route: appRoute;
@@ -13,7 +14,9 @@ interface Props {
 }
 
 export default function ElementNoChildren({route, isChild, handleItemClick}: Props): JSX.Element {
-    const { path, label, icon }: appRoute = route;
+    const { path, icon }: appRoute = route;
+    const { translateRouteLabel } = useLanguageService();
+    const label: string = translateRouteLabel(route);
 
     return (
         <ListItem disablePadding>

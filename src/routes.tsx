@@ -1,7 +1,7 @@
 import type {JSX} from "react";
 import {lazy, Suspense} from "react";
 import HomeIcon from "@mui/icons-material/Home";
-import {mediaRoutes} from "./modules/media-tracker/media-tracker-routes.tsx";
+import {routes as mediaRoutes} from "./modules/media-tracker/routes.tsx";
 
 const MainPage = lazy(() => import("./pages/MainPage/MainPage"))
 
@@ -9,6 +9,8 @@ export interface appRoute {
     path: string;
     element?: JSX.Element;
     label: string;
+    i18nKey?: string;
+    i18nNs?: string;
     icon: JSX.Element;
     children?: appRoute[];
 }
@@ -22,6 +24,8 @@ export const appRoutes: appRoute[] = [
             </Suspense>
         ),
         label: "Main Page",
+        i18nKey: "start",
+        i18nNs: "common",
         icon: <HomeIcon/>
     },
     ...mediaRoutes

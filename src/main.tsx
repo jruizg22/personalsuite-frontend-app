@@ -5,6 +5,8 @@ import {LayoutContainer} from "./layout";
 import {type appRoute, appRoutes} from "./routes.tsx";
 import type {JSX} from "react";
 
+import "./i18n/i18n";
+
 createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
         <LayoutContainer>
