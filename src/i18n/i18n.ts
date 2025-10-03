@@ -19,7 +19,7 @@ i18n
                 mediaTracker: mediaTrackerEsES
             }
         },
-        lng: 'es-ES',
+        lng: 'en-US',
         fallbackLng: 'en-US',
         ns: ['common', 'mediaTracker'],
         defaultNS: 'common',

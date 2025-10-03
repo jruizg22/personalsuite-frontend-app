@@ -11,10 +11,17 @@ export default function Content({drawerWidth, children}: Props): JSX.Element {
     return (
         <Box
             component="main"
-            sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+            sx={{
+                flexGrow: 1,
+                p: 3,
+                width: { sm: `calc(100% - ${drawerWidth}px)` },
+                minHeight: "100vh",
+                display: "flex",
+                flexDirection: "column",
+            }}
         >
             <Toolbar />
             {children}
         </Box>
-    )
+    );
 }

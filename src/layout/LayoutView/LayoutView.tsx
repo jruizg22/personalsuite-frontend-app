@@ -8,7 +8,6 @@ import {Content} from "../Content";
 interface Props {
     drawerWidth: number;
     mobileOpen: boolean;
-    topBarLabel: string;
     onToggleDrawer: () => void;
     onDrawerClose: () => void;
     onDrawerTransitionEnd: () => void;
@@ -18,7 +17,6 @@ interface Props {
 export default function LayoutView({
                                        drawerWidth,
                                        mobileOpen,
-                                       topBarLabel,
                                        onToggleDrawer,
                                        onDrawerClose,
                                        onDrawerTransitionEnd,
@@ -29,7 +27,6 @@ export default function LayoutView({
             <CssBaseline />
             <TopBar
                 drawerWidth={drawerWidth}
-                topBarLabel={topBarLabel}
                 onToggleDrawer={onToggleDrawer}
             />
             <Navigation
