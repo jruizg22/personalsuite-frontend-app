@@ -5,7 +5,8 @@ import DrawerToggleButton from "./DrawerToggleButton/DrawerToggleButton.tsx";
 import {type JSX, useEffect, useState} from "react";
 import {type Location, useLocation} from "react-router-dom";
 import {useLanguageService} from "@/services/useLanguageService.ts";
-import {type appRoute, appRoutes} from "@/routes.tsx";
+import {appRoutes} from "@/routes";
+import {type appRoute} from "@/types";
 
 interface Props {
     drawerWidth: number,

@@ -1,4 +1,4 @@
-import type {appRoute} from "../../../../routes.tsx";
+import {type appRoute} from "@/types";
 import {type JSX} from "react";
 import ElementNoChildren from "./ElementNoChildren";
 import ElementWithChildren from "./ElementWithChildren";

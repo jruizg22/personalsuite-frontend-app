@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import type { appRoute } from "../routes";
+import { type appRoute } from "@/types";
 
 export function useLanguageService() {
     const { t, i18n } = useTranslation();

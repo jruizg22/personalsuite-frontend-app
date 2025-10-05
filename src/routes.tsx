@@ -1,4 +1,4 @@
-import type {JSX} from "react";
+import {type appRoute} from "@/types";
 import {lazy, Suspense} from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -6,16 +6,6 @@ import SettingsPage from "@/pages/SettingsPage/SettingsPage.tsx";
 import {routes as mediaRoutes} from "@media-tracker/routes";
 
 const MainPage = lazy(() => import("./pages/MainPage/MainPage"))
-
-export interface appRoute {
-    path: string;
-    element?: JSX.Element;
-    label: string;
-    i18nKey?: string;
-    i18nNs?: string;
-    icon: JSX.Element;
-    children?: appRoute[];
-}
 
 export const appRoutes: appRoute[] = [
     {

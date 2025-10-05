@@ -1,5 +1,5 @@
 import {type JSX, useState} from "react";
-import {useLanguageService} from "../../../../services/useLanguageService.ts";
+import {useLanguageService} from "@/services/useLanguageService.ts";
 import {
     ListItem,
     ListItemButton,
@@ -9,7 +9,7 @@ import {
     List
 } from "@mui/material";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
-import type {appRoute} from "../../../../routes.tsx";
+import {type appRoute} from "@/types";
 import ElementNoChildren from "./ElementNoChildren";
 
 interface Props {

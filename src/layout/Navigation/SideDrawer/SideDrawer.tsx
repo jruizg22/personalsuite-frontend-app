@@ -1,5 +1,6 @@
 import {type JSX} from "react";
-import {type appRoute, appRoutes} from "@/routes";
+import {appRoutes} from "@/routes";
+import {type appRoute} from "@/types";
 import List from "@mui/material/List";
 import SideDrawerElement from "./SideDrawerElement/SideDrawerElement.tsx";
 import {Divider} from "@mui/material";
