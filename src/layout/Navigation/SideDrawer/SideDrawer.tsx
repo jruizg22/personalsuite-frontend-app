@@ -1,5 +1,5 @@
-import type {JSX} from "react";
-import {type appRoute, appRoutes} from "../../../routes.tsx";
+import {type JSX} from "react";
+import {type appRoute, appRoutes} from "@/routes";
 import List from "@mui/material/List";
 import SideDrawerElement from "./SideDrawerElement/SideDrawerElement.tsx";
 import {Divider} from "@mui/material";
@@ -31,8 +31,8 @@ export default function SideDrawer({handleItemClick}: Props): JSX.Element {
 
             <Divider />
 
-            {/* Footer fijo */}
-            <Box sx={{ p: 2 }}>
+            {/* Fixed footer */}
+            <Box>
                 {appRoutes
                     .filter(route => route.path === "/settings")
                     .map((route: appRoute): JSX.Element => (

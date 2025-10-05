@@ -13,7 +13,6 @@ export default function Content({drawerWidth, children}: Props): JSX.Element {
             component="main"
             sx={{
                 flexGrow: 1,
-                p: 3,
                 width: { sm: `calc(100% - ${drawerWidth}px)` },
                 minHeight: "100vh",
                 display: "flex",

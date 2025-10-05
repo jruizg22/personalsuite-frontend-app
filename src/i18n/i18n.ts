@@ -3,8 +3,8 @@ import { initReactI18next } from 'react-i18next';
 
 import commonEnUS from "./locales/en-US.json";
 import commonEsES from "./locales/es-ES.json";
-import mediaTrackerEnUS from "../modules/media-tracker/locales/en_US.json";
-import mediaTrackerEsES from "../modules/media-tracker/locales/es_ES.json";
+import mediaTrackerEnUS from "@media-tracker/locales/en_US.json";
+import mediaTrackerEsES from "@media-tracker/locales/es_ES.json";
 
 i18n
     .use(initReactI18next)

@@ -38,7 +38,7 @@ export const appRoutes: appRoute[] = [
           </Suspense>
         ),
         label: "Settings",
-        i18nKey: "settings",
+        i18nKey: "settings.settings",
         i18nNs: "common",
         icon: <SettingsIcon/>
     },
