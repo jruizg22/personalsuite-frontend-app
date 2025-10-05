@@ -1,5 +1,5 @@
 import {type JSX, type ReactNode, useState} from "react";
-import {LayoutView} from "../LayoutView";
+import {LayoutView} from "@/layout";
 
 interface Props {
     children: ReactNode;

@@ -2,8 +2,8 @@ import type {JSX} from "react";
 import {lazy, Suspense} from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsIcon from "@mui/icons-material/Settings";
-import {routes as mediaRoutes} from "./modules/media-tracker/routes.tsx";
-import SettingsPage from "./pages/SettingsPage/SettingsPage.tsx";
+import SettingsPage from "@/pages/SettingsPage/SettingsPage.tsx";
+import {routes as mediaRoutes} from "@media-tracker/routes";
 
 const MainPage = lazy(() => import("./pages/MainPage/MainPage"))
 

@@ -3,9 +3,9 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import DrawerToggleButton from "./DrawerToggleButton/DrawerToggleButton.tsx";
 import {type JSX, useEffect, useState} from "react";
-import {type appRoute, appRoutes} from "../../routes.tsx";
 import {type Location, useLocation} from "react-router-dom";
-import {useLanguageService} from "../../services/useLanguageService.ts";
+import {useLanguageService} from "@/services/useLanguageService.ts";
+import {type appRoute, appRoutes} from "@/routes.tsx";
 
 interface Props {
     drawerWidth: number,
