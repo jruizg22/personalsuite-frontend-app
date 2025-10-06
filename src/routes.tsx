@@ -5,6 +5,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import SettingsPage from "@/pages/SettingsPage/SettingsPage.tsx";
 import {routes as mediaRoutes} from "@media-tracker/routes";
 
+const ns: string = "common";
+
 const MainPage = lazy(() => import("./pages/MainPage/MainPage"))
 
 export const appRoutes: appRoute[] = [
@@ -16,8 +18,10 @@ export const appRoutes: appRoute[] = [
             </Suspense>
         ),
         label: "Main Page",
-        i18nKey: "start",
-        i18nNs: "common",
+        i18nProps: {
+            i18nKey: "start",
+            i18nNs: ns
+        },
         icon: <HomeIcon/>
     },
     {
@@ -28,8 +32,10 @@ export const appRoutes: appRoute[] = [
           </Suspense>
         ),
         label: "Settings",
-        i18nKey: "settings.settings",
-        i18nNs: "common",
+        i18nProps: {
+            i18nKey: "settings.settings",
+            i18nNs: ns
+        },
         icon: <SettingsIcon/>
     },
     ...mediaRoutes

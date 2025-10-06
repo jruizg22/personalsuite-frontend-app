@@ -9,7 +9,7 @@ import {
     List
 } from "@mui/material";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
-import {type appRoute} from "@/types";
+import type {appRoute} from "@/types";
 import ElementNoChildren from "./ElementNoChildren";
 
 interface Props {
@@ -20,8 +20,7 @@ interface Props {
 export default function ElementWithChildren({route, handleItemClick}: Props): JSX.Element {
     const {icon, children}: appRoute = route;
     const [collapsed, setCollapsed] = useState<boolean>(false);
-    const { translateRouteLabel } = useLanguageService();
-    const label: string = translateRouteLabel(route);
+    const { translateLabel } = useLanguageService();
 
     return (
         <>
@@ -32,7 +31,7 @@ export default function ElementWithChildren({route, handleItemClick}: Props): JS
                             {icon}
                         </ListItemIcon>
                     )}
-                    <ListItemText primary={label} />
+                    <ListItemText primary={translateLabel(route.i18nProps, route.label)} />
                     {collapsed ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
             </ListItem>

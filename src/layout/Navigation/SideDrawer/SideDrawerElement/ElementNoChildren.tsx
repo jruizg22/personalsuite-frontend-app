@@ -4,7 +4,7 @@ import {NavLink} from "react-router-dom";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListItem from "@mui/material/ListItem";
-import {type appRoute} from "@/types";
+import type {appRoute} from "@/types";
 import {useLanguageService} from "@/services/useLanguageService.ts";
 
 interface Props {
@@ -15,8 +15,7 @@ interface Props {
 
 export default function ElementNoChildren({route, isChild, handleItemClick}: Props): JSX.Element {
     const { path, icon }: appRoute = route;
-    const { translateRouteLabel } = useLanguageService();
-    const label: string = translateRouteLabel(route);
+    const { translateLabel } = useLanguageService();
 
     return (
         <ListItem disablePadding>
@@ -34,7 +33,7 @@ export default function ElementNoChildren({route, isChild, handleItemClick}: Pro
                         {icon}
                     </ListItemIcon>
                 )}
-                <ListItemText primary={label} />
+                <ListItemText primary={translateLabel(route.i18nProps, route.label)} />
             </ListItemButton>
         </ListItem>
     )

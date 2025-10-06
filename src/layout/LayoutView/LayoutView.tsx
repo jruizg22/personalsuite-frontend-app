@@ -21,21 +21,23 @@ export default function LayoutView({
                                        children
                                    }: Props): JSX.Element {
     return (
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
             <CssBaseline />
             <TopBar
                 drawerWidth={drawerWidth}
                 onToggleDrawer={onToggleDrawer}
             />
-            <Navigation
-                drawerWidth={drawerWidth}
-                mobileOpen={mobileOpen}
-                handleDrawerClose={onDrawerClose}
-                handleDrawerTransitionEnd={onDrawerTransitionEnd}
-            />
-            <Content drawerWidth={drawerWidth}>
-                {children}
-            </Content>
+            <Box sx={{ display: "flex", flexGrow: 1 }}>
+                <Navigation
+                    drawerWidth={drawerWidth}
+                    mobileOpen={mobileOpen}
+                    handleDrawerClose={onDrawerClose}
+                    handleDrawerTransitionEnd={onDrawerTransitionEnd}
+                />
+                <Content drawerWidth={drawerWidth}>
+                    {children}
+                </Content>
+            </Box>
         </Box>
     );
 }

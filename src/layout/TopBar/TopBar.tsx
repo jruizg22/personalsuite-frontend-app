@@ -6,7 +6,7 @@ import {type JSX, useEffect, useState} from "react";
 import {type Location, useLocation} from "react-router-dom";
 import {useLanguageService} from "@/services/useLanguageService.ts";
 import {appRoutes} from "@/routes";
-import {type appRoute} from "@/types";
+import type {appRoute} from "@/types";
 
 interface Props {
     drawerWidth: number,
@@ -32,12 +32,12 @@ export default function TopBar({drawerWidth, onToggleDrawer}: Props): JSX.Elemen
     function useTopBarLabel(): string {
         const location: Location = useLocation();
         const [topBarLabel, setTopBarLabel] = useState<string>("Personal Suite");
-        const { translateRouteLabel, i18n } = useLanguageService();
+        const { translateLabel, i18n } = useLanguageService();
 
         useEffect((): void => {
             const routeTrail: appRoute[] | null = findRouteTrail(appRoutes, location.pathname);
             if (routeTrail) {
-                const translatedLabels: string[] = routeTrail.map(route => translateRouteLabel(route));
+                const translatedLabels: string[] = routeTrail.map(route => translateLabel(route.i18nProps, route.label));
                 setTopBarLabel(translatedLabels.join(" / "));
             } else {
                 setTopBarLabel("Personal Suite");
