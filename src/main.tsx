@@ -2,8 +2,9 @@ import {createRoot} from 'react-dom/client'
 import './index.css'
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {LayoutContainer} from "./layout";
-import {type appRoute, appRoutes} from "./routes.tsx";
+import {appRoutes} from "./routes.tsx";
 import type {JSX} from "react";
+import type {appRoute} from "@/types.ts";
 
 import "./i18n/i18n";
 
