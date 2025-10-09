@@ -34,7 +34,7 @@ export default function LayoutView({
                     handleDrawerClose={onDrawerClose}
                     handleDrawerTransitionEnd={onDrawerTransitionEnd}
                 />
-                <Content drawerWidth={drawerWidth}>
+                <Content>
                     {children}
                 </Content>
             </Box>
