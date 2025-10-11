@@ -1,20 +1,12 @@
 import {Box, FormControl, InputLabel, Select, MenuItem, type SelectChangeEvent} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {type JSX} from "react";
+import type {language} from "@/types";
+import {languages} from "@/languages";
 
 export default function LanguageSelector(): JSX.Element {
     const { i18n } = useTranslation();
     const { t } = useTranslation("common");
-
-    interface language {
-        value: string;
-        label: string;
-    }
-
-    const languages: language[] = [
-        {value: "en-US", label: "English (United States)"},
-        {value: "es-ES", label: "Español (España)"}
-    ]
 
     const handleChange = (event: SelectChangeEvent): void => {
         i18n.changeLanguage(event.target.value as string);
