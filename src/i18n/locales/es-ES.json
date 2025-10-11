@@ -1,8 +1,9 @@
 {
   "welcome": "Bienvenido a Personal Suite",
   "start": "Inicio",
-  "settings": {
-    "settings": "Configuración",
-    "language": "Idioma"
-  }
+  "settings": "Configuración",
+  "language": "Idioma",
+  "name": "Nombre",
+  "url": "Enlace",
+  "description": "Descripción"
 }

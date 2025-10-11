@@ -4,8 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SettingsPage from "@/pages/SettingsPage/SettingsPage.tsx";
 import {routes as mediaRoutes} from "@media-tracker/routes";
-
-const ns: string = "common";
+import {commonKeys} from "@i18n/i18nKeys";
 
 const MainPage = lazy(() => import("./pages/MainPage/MainPage"))
 
@@ -19,8 +18,8 @@ export const appRoutes: appRoute[] = [
         ),
         label: "Main Page",
         i18nProps: {
-            i18nKey: "start",
-            i18nNs: ns
+            i18nKey: commonKeys.start,
+            i18nNs: commonKeys.ns
         },
         icon: <HomeIcon/>
     },
@@ -33,8 +32,8 @@ export const appRoutes: appRoute[] = [
         ),
         label: "Settings",
         i18nProps: {
-            i18nKey: "settings.settings",
-            i18nNs: ns
+            i18nKey: commonKeys.settings,
+            i18nNs: commonKeys.ns
         },
         icon: <SettingsIcon/>
     },
