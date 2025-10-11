@@ -1,5 +1,10 @@
 {
   "mediaTracker": "Media Tracker",
   "media": "Media",
-  "youTube": "YouTube"
+  "youTube": {
+    "youTube": "YouTube",
+    "channels": "Channels",
+    "videos": "Videos",
+    "playlists": "Playlists"
+  }
 }
