@@ -3,6 +3,7 @@
   "start": "Inicio",
   "settings": "Configuración",
   "language": "Idioma",
+  "id": "ID",
   "name": "Nombre",
   "url": "Enlace",
   "description": "Descripción"
