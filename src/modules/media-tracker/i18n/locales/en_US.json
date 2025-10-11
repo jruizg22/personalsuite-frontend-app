@@ -3,7 +3,10 @@
   "media": "Media",
   "youTube": {
     "youTube": "YouTube",
-    "channels": "Channels",
+    "channels": {
+      "channels": "Channels",
+      "created_at": "Created at"
+    },
     "videos": "Videos",
     "playlists": "Playlists"
   }

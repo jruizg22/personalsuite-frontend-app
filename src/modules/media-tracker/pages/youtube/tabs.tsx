@@ -1,5 +1,5 @@
 import type {appTab} from "@/types";
-import {ns} from "@media-tracker/routes";
+import {mediaTrackerKeys} from "@media-tracker/i18n/i18nKeys";
 import ChannelsTab from "@media-tracker/pages/youtube/ChannelsTab/ChannelsTab.tsx";
 import VideosTab from "@media-tracker/pages/youtube/VideosTab/VideosTab.tsx";
 
@@ -8,16 +8,16 @@ export const tabs: appTab[] = [
         label: "Channels",
         Component: ChannelsTab,
         i18nProps: {
-            i18nKey: "youTube.channels",
-            i18nNs: ns
+            i18nKey: mediaTrackerKeys.youTube.channels.root,
+            i18nNs: mediaTrackerKeys.ns
         }
     },
     {
         label: "Videos",
         Component: VideosTab,
         i18nProps: {
-            i18nKey: "youTube.videos",
-            i18nNs: ns
+            i18nKey: mediaTrackerKeys.youTube.videos,
+            i18nNs: mediaTrackerKeys.ns
         }
     }
 ]

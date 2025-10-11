@@ -4,18 +4,17 @@ import MovieIcon from "@mui/icons-material/Movie";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import MediaTrackerLayout from "./MediaTrackerLayout/MediaTrackerLayout";
+import {mediaTrackerKeys} from "@media-tracker/i18n/i18nKeys";
 
 const YouTubePage = lazy(() => import("@media-tracker/pages/youtube/YouTubeLayout/YouTubeLayout.tsx"))
-
-export const ns: string = "mediaTracker";
 
 export const routes: appRoute[] = [
     {
         path: "/media-tracker",
         label: "Media Tracker",
         i18nProps: {
-            i18nKey: "mediaTracker",
-            i18nNs: ns
+            i18nKey: mediaTrackerKeys.root,
+            i18nNs: mediaTrackerKeys.ns
         },
         icon: <MovieIcon />,
         children: [
@@ -24,8 +23,8 @@ export const routes: appRoute[] = [
                 element: <MediaTrackerLayout />,
                 label: "Media",
                 i18nProps: {
-                    i18nKey: "media",
-                    i18nNs: ns
+                    i18nKey: mediaTrackerKeys.media,
+                    i18nNs: mediaTrackerKeys.ns
                 },
                 icon: <PlayCircleIcon />,
             },
@@ -38,8 +37,8 @@ export const routes: appRoute[] = [
                 ),
                 label: "YouTube",
                 i18nProps: {
-                    i18nKey: "youTube.youTube",
-                    i18nNs: ns
+                    i18nKey: mediaTrackerKeys.youTube.root,
+                    i18nNs: mediaTrackerKeys.ns
                 },
                 icon: <YouTubeIcon />
             },
