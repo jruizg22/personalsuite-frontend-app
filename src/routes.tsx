@@ -5,6 +5,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import SettingsPage from "@/pages/SettingsPage/SettingsPage.tsx";
 import {routes as mediaRoutes} from "@media-tracker/routes";
 import {commonKeys} from "@i18n/i18nKeys";
+import LoadingScreen from "@/shared/LoadingScreen.tsx";
 
 const MainPage = lazy(() => import("./pages/MainPage/MainPage"))
 
@@ -12,7 +13,7 @@ export const appRoutes: appRoute[] = [
     {
         path: "/main",
         element: (
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingScreen/>}>
                 <MainPage/>
             </Suspense>
         ),
@@ -26,7 +27,7 @@ export const appRoutes: appRoute[] = [
     {
         path: "/settings",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingScreen/>}>
             <SettingsPage/>
           </Suspense>
         ),
