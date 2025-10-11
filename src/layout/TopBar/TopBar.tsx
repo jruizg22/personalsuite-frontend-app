@@ -1,12 +1,11 @@
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import DrawerToggleButton from "./DrawerToggleButton/DrawerToggleButton.tsx";
+import {AppBar, Toolbar, Typography} from "@mui/material";
+import DrawerToggleButton from "./DrawerToggleButton/DrawerToggleButton";
 import {type JSX, useEffect, useState} from "react";
 import {type Location, useLocation} from "react-router-dom";
-import {useLanguageService} from "@/services/useLanguageService.ts";
+import {useLanguageService} from "@/services/useLanguageService";
 import {appRoutes} from "@/routes";
 import type {appRoute} from "@/types";
+import {useIsDesktop} from "@/hooks/useIsDesktop";
 
 interface Props {
     drawerWidth: number,
@@ -49,16 +48,18 @@ export default function TopBar({drawerWidth, onToggleDrawer}: Props): JSX.Elemen
 
     const topBarLabel: string = useTopBarLabel();
 
+    const isDesktop: boolean = useIsDesktop();
+
     return (
         <AppBar
             position="fixed"
             sx={{
-                width: { sm: `calc(100% - ${drawerWidth}px)` },
-                ml: { sm: `${drawerWidth}px` },
+                width: isDesktop ? `calc(100% - ${drawerWidth}px)` : "100%",
+                ml: isDesktop ? `${drawerWidth}px` : 0,
             }}
         >
             <Toolbar>
-                <DrawerToggleButton onToggleDrawer={onToggleDrawer}/>
+                {!isDesktop && <DrawerToggleButton onToggleDrawer={onToggleDrawer} />}
                 <Typography variant="h6" noWrap component="div">
                     {topBarLabel}
                 </Typography>

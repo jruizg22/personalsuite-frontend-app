@@ -1,11 +1,8 @@
 import type {JSX} from "react";
-import ListItemButton from "@mui/material/ListItemButton";
 import {NavLink} from "react-router-dom";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import ListItem from "@mui/material/ListItem";
 import type {appRoute} from "@/types";
 import {useLanguageService} from "@/services/useLanguageService.ts";
+import {ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 
 interface Props {
     route: appRoute;

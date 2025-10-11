@@ -1,5 +1,5 @@
 import {type JSX, useState} from "react";
-import {useLanguageService} from "@/services/useLanguageService.ts";
+import {useLanguageService} from "@/services/useLanguageService";
 import {
     ListItem,
     ListItemButton,

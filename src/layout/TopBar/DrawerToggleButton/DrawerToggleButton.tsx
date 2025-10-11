@@ -13,7 +13,7 @@ export default function DrawerToggleButton({onToggleDrawer}: Props): JSX.Element
             aria-label="open drawer"
             edge="start"
             onClick={onToggleDrawer}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ mr: 2 }}
         >
             <MenuIcon />
         </IconButton>

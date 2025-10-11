@@ -1,7 +1,7 @@
 import type {JSX} from "react";
-import Drawer from "@mui/material/Drawer";
-import Box from "@mui/material/Box";
 import {SideDrawer} from "./SideDrawer";
+import {Box, Drawer} from "@mui/material";
+import {useIsDesktop} from "@/hooks/useIsDesktop";
 
 interface Props {
     drawerWidth: number,
@@ -11,39 +11,30 @@ interface Props {
 }
 
 export default function Navigation({drawerWidth, mobileOpen, handleDrawerClose, handleDrawerTransitionEnd}: Props): JSX.Element {
+    const isDesktop: boolean = useIsDesktop();
+
+    const drawerVariant: "permanent" | "temporary" = isDesktop ? "permanent" : "temporary";
+
     return (
         <Box
             component="nav"
-            sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-            aria-label="mailbox folders"
+            sx={{ width: isDesktop ? drawerWidth : "auto", flexShrink: { md: 0 } }}
+            aria-label="navigation drawer"
         >
-            {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
             <Drawer
-                variant="temporary"
-                open={mobileOpen}
-                onTransitionEnd={handleDrawerTransitionEnd}
-                onClose={handleDrawerClose}
+                variant={drawerVariant}
+                open={isDesktop || mobileOpen}
+                onClose={isDesktop ? undefined : handleDrawerClose}
+                onTransitionEnd={isDesktop ? undefined : handleDrawerTransitionEnd}
+                ModalProps={isDesktop ? undefined : { keepMounted: true }}
                 sx={{
-                    display: { xs: 'block', sm: 'none' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                }}
-                slotProps={{
-                    root: {
-                        keepMounted: true, // Better open performance on mobile.
+                    "& .MuiDrawer-paper": {
+                        boxSizing: "border-box",
+                        width: drawerWidth,
                     },
                 }}
             >
-                <SideDrawer handleItemClick={handleDrawerClose}/>
-            </Drawer>
-            <Drawer
-                variant="permanent"
-                sx={{
-                    display: { xs: 'none', sm: 'block' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                }}
-                open
-            >
-                <SideDrawer/>
+                <SideDrawer handleItemClick={isDesktop ? undefined : handleDrawerClose} />
             </Drawer>
         </Box>
     )

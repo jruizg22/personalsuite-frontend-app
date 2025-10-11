@@ -1,7 +1,5 @@
+import {Box, Toolbar, Typography} from "@mui/material";
 import type {JSX} from "react";
-import Toolbar from "@mui/material/Toolbar";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 
 export default function SideDrawerHeader(): JSX.Element {
     return (

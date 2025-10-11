@@ -1,11 +1,9 @@
 import {type JSX} from "react";
 import {appRoutes} from "@/routes";
 import {type appRoute} from "@/types";
-import List from "@mui/material/List";
-import SideDrawerElement from "./SideDrawerElement/SideDrawerElement.tsx";
-import {Divider} from "@mui/material";
-import SideDrawerHeader from "./SideDrawerHeader.tsx";
-import Box from "@mui/material/Box";
+import SideDrawerElement from "./SideDrawerElement/SideDrawerElement";
+import {Divider, Box, List} from "@mui/material";
+import SideDrawerHeader from "./SideDrawerHeader";
 
 interface Props {
     handleItemClick?: () => void;

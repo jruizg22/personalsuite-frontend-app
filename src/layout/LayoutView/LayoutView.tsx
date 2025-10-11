@@ -1,7 +1,6 @@
 import {type JSX, type ReactNode} from "react";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import {TopBar, Navigation, Content} from "@/layout";
+import {Content, Navigation, TopBar} from "@/layout";
+import {Box, CssBaseline} from "@mui/material";
 
 interface Props {
     drawerWidth: number;
