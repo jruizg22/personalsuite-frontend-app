@@ -8,5 +8,5 @@ export function useLanguageService() {
         return t(i18nKey, { ns: i18nNs, defaultValue: fallback });
     }
 
-    return { translateLabel, i18n };
+    return { translateLabel, i18n, t };
 }

@@ -4,6 +4,7 @@ export const commonKeys = {
     start: "start",
     settings: "settings",
     language: "language",
+    actions: "actions",
     id: "id",
     name: "name",
     url: "url",
