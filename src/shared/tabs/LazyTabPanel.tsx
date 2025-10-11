@@ -24,7 +24,11 @@ export function LazyTabPanel({ value, index, children }: Props): JSX.Element | n
             hidden={value !== index}
             id={`tabpanel-${index}`}
             aria-labelledby={`tab-${index}`}
-            style={{ height: "100%", width: "100%" }}
+            style={{
+                display: value === index ? "block" : "none",
+                height: "100%",
+                width: "100%",
+            }}
         >
             {children}
         </div>
