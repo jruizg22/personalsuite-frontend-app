@@ -5,6 +5,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import MediaTrackerLayout from "./MediaTrackerLayout/MediaTrackerLayout";
 import {mediaTrackerKeys} from "@media-tracker/i18n/i18nKeys";
+import LoadingScreen from "@/shared/LoadingScreen";
 
 const YouTubePage = lazy(() => import("@media-tracker/pages/youtube/YouTubeLayout/YouTubeLayout.tsx"))
 
@@ -31,7 +32,7 @@ export const routes: appRoute[] = [
             {
                 path: "/media-tracker/youtube",
                 element: (
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<LoadingScreen/>}>
                         <YouTubePage/>
                     </Suspense>
                 ),
