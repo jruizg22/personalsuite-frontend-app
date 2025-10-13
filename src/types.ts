@@ -24,3 +24,10 @@ export interface appTab {
     i18nProps: i18nProps;
     Component: ComponentType;
 }
+
+export interface MenuAction {
+    label: string;
+    icon?: JSX.Element;
+    onClick: () => void;
+    color?: string;
+}
