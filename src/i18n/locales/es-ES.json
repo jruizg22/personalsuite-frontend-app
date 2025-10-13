@@ -10,5 +10,6 @@
   "description": "Descripción",
   "edit": "Editar",
   "delete": "Eliminar",
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+  "save": "Guardar"
 }

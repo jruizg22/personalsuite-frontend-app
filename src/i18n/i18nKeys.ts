@@ -11,5 +11,6 @@ export const commonKeys = {
     description: "description",
     edit: "edit",
     delete: "delete",
-    cancel: "cancel"
+    cancel: "cancel",
+    save: "save"
 } as const;
