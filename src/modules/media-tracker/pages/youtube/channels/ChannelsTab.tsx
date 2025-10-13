@@ -87,7 +87,11 @@ export default function ChannelsTab(): JSX.Element {
                 )}
                 message={t(
                     mediaTrackerKeys.youTube.channels.dialogs.deleteDialog.message,
-                    {ns: mediaTrackerKeys.ns, defaultValue: `Are you sure you want to delete "${selectedChannel?.name}"?`}
+                    {
+                        ns: mediaTrackerKeys.ns,
+                        channel: selectedChannel?.name,
+                        defaultValue: `Are you sure you want to delete "${selectedChannel?.name}"?`
+                    }
                 )}
                 confirmLabel={t(commonKeys.delete, {ns: commonKeys.ns, defaultValue: "Delete"})}
                 cancelLabel={t(commonKeys.cancel, {ns: commonKeys.ns, defaultValue: "Cancel"})}

@@ -10,7 +10,7 @@
       "dialogs": {
         "delete_dialog": {
           "title": "Delete channel",
-          "message": "Are you sure you want to delete the channel {channel}?"
+          "message": "Are you sure you want to delete the channel {{channel}}?"
         }
       }
     },
