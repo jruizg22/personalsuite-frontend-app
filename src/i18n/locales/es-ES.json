@@ -9,5 +9,6 @@
   "url": "Enlace",
   "description": "Descripción",
   "edit": "Editar",
-  "delete": "Eliminar"
+  "delete": "Eliminar",
+  "cancel": "Cancelar"
 }
