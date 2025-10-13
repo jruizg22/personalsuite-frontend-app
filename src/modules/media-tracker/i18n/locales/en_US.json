@@ -5,7 +5,14 @@
     "youTube": "YouTube",
     "channels": {
       "channels": "Channels",
-      "created_at": "Created at"
+      "created_at": "Created at",
+      "search_channels": "Search channels...",
+      "dialogs": {
+        "delete_dialog": {
+          "title": "Delete channel",
+          "message": "Are you sure you want to delete the channel {channel}?"
+        }
+      }
     },
     "videos": "Videos",
     "playlists": "Playlists"
