@@ -8,6 +8,9 @@
       "created_at": "Created at",
       "search_channels": "Search channels...",
       "dialogs": {
+        "edit_dialog": {
+          "title": "Edit channel"
+        },
         "delete_dialog": {
           "title": "Delete channel",
           "message": "Are you sure you want to delete the channel {{channel}}?"

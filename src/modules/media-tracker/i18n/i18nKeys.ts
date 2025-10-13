@@ -9,6 +9,9 @@ export const mediaTrackerKeys = {
             createdAt: "youTube.channels.created_at",
             searchChannels: "youTube.channels.search_channels",
             dialogs: {
+                editDialog: {
+                    title: "youTube.channels.dialogs.edit_dialog.title",
+                },
                 deleteDialog: {
                     title: "youTube.channels.dialogs.delete_dialog.title",
                     message: "youTube.channels.dialogs.delete_dialog.message",
