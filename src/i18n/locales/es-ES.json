@@ -7,5 +7,7 @@
   "id": "ID",
   "name": "Nombre",
   "url": "Enlace",
-  "description": "Descripción"
+  "description": "Descripción",
+  "edit": "Editar",
+  "delete": "Eliminar"
 }

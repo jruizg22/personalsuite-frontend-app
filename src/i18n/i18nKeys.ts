@@ -8,5 +8,7 @@ export const commonKeys = {
     id: "id",
     name: "name",
     url: "url",
-    description: "description"
+    description: "description",
+    edit: "edit",
+    delete: "delete",
 } as const;
