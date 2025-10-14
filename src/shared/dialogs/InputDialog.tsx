@@ -18,9 +18,9 @@ interface Props {
     children: ReactNode;
 }
 
-export default function EditDialog({
+export default function InputDialog({
     open,
-    title = "Edit",
+    title = "New/Edit",
     fullscreen = false,
     confirmLabel = "Save",
     cancelLabel = "Cancel",
