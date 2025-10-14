@@ -1,5 +1,5 @@
 import {type JSX, type SyntheticEvent} from "react";
-import {Box, Tab, Tabs} from "@mui/material";
+import {Box, Tab, Tabs, type Theme} from "@mui/material";
 import {useLanguageService} from "@/services/useLanguageService.ts";
 import type {appTab} from "@/types.ts";
 
@@ -14,7 +14,15 @@ export default function TabContainer({tabs, value, handleChange}: Props): JSX.El
 
     return (
         <Box>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Box sx={{
+                position: "sticky",
+                top: 0,
+                zIndex: 10,
+                backgroundColor: (theme: Theme): string => theme.palette.background.default,
+                borderBottom: 1,
+                borderColor: "divider",
+            }}
+            >
                 <Tabs
                     value={value}
                     onChange={handleChange}

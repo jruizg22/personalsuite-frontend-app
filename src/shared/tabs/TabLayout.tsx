@@ -16,10 +16,24 @@ export default function TabLayout({tabs}: Props): JSX.Element {
     };
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                flexGrow: 1,
+                overflow: "hidden"
+            }}
+        >
             <TabContainer tabs={tabs} value={selectedTab} handleChange={handleTabChange} />
 
-            <Box sx={{ overflow: "auto" }}>
+            <Box
+                sx={{
+                    flexGrow: 1,
+                    overflowY: "auto",
+                    display: "flex",
+                    flexDirection: "column",
+                }}
+            >
                 {tabs.map((tab: appTab, index: number): JSX.Element => (
                     <LazyTabPanel key={index} value={selectedTab} index={index}>
                         <tab.Component />

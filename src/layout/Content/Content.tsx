@@ -13,11 +13,21 @@ export default function Content({children}: Props): JSX.Element {
                 flexGrow: 1,
                 display: "flex",
                 flexDirection: "column",
-                overflowX: "hidden"
+                height: "100vh",
+                overflow: "hidden",
             }}
         >
             <Toolbar />
-            {children}
+            <Box
+                sx={{
+                    flexGrow: 1,
+                    overflowY: "auto",
+                    display: "flex",
+                    flexDirection: "column",
+                }}
+            >
+                {children}
+            </Box>
         </Box>
     );
 }
