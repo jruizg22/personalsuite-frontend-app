@@ -8,6 +8,9 @@
       "created_at": "Fecha de creación",
       "search_channels": "Buscar canales...",
       "dialogs": {
+        "new_dialog": {
+          "title": "Nuevo canal"
+        },
         "edit_dialog": {
           "title": "Editar canal"
         },

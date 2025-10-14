@@ -8,6 +8,9 @@
       "created_at": "Created at",
       "search_channels": "Search channels...",
       "dialogs": {
+        "new_dialog": {
+          "title": "New channel"
+        },
         "edit_dialog": {
           "title": "Edit channel"
         },
