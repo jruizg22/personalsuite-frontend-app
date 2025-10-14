@@ -1,11 +1,9 @@
 import type {appRoute} from "@/types";
 import {lazy, Suspense} from "react";
-import MovieIcon from "@mui/icons-material/Movie";
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import YouTubeIcon from "@mui/icons-material/YouTube";
+import {Movie as MovieIcon, PlayCircle as PlayCircleIcon, YouTube as YouTubeIcon} from "@mui/icons-material";
 import MediaTrackerLayout from "./MediaTrackerLayout/MediaTrackerLayout";
 import {mediaTrackerKeys} from "@media-tracker/i18n/i18nKeys";
-import LoadingScreen from "@/shared/LoadingScreen";
+import {LoadingScreen} from "@/shared";
 
 const YouTubePage = lazy(() => import("@media-tracker/pages/youtube/YouTubeLayout/YouTubeLayout.tsx"))
 
