@@ -1,5 +1,5 @@
 import {type Dispatch, type JSX, type SetStateAction, useState} from "react";
-import {Box, Grid} from "@mui/material";
+import {Box, Grid, type Theme} from "@mui/material";
 import {SearchField} from "@/shared";
 import {AddFAB} from "@/shared";
 import {InputDialog, ConfirmDialog} from "@/shared/dialogs";
@@ -75,29 +75,56 @@ export default function CrudCardLayout<T extends { id: string }>({
             : items;
 
     return (
-        <Box sx={{ m: 1 }}>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                flexGrow: 1,
+            }}
+        >
             {searchProps && (
-                <SearchField
-                    value={searchText}
-                    onChange={setSearchText}
-                    label={searchProps.label}
-                />
+                <Box
+                    sx={{
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 10,
+                        backgroundColor: (theme: Theme): string => theme.palette.background.default,
+                        pt: 1,
+                        mx: 1
+                    }}
+                >
+                    <SearchField
+                        value={searchText}
+                        onChange={setSearchText}
+                        label={searchProps.label}
+                    />
+                </Box>
             )}
 
-            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                {filteredItems.map((item: T): JSX.Element => (
-                    <Grid key={item.id} size={{ xs: 4, sm: 4, md: 4 }} sx={{ display: "flex" }}>
-                        {renderCard(
-                            item,
-                            (): void => {
-                                setEditing({ ...item });
-                                setEditOpen(true);
-                            },
-                            (): void => handleDelete(item)
-                        )}
-                    </Grid>
-                ))}
-            </Grid>
+            <Box
+                sx={{
+                    flexGrow: 1,
+                    overflowY: "auto",
+                    display: "flex",
+                    flexDirection: "column",
+                    m: 1
+                }}
+            >
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                    {filteredItems.map((item: T): JSX.Element => (
+                        <Grid key={item.id} size={{ xs: 4, sm: 4, md: 4 }} sx={{ display: "flex" }}>
+                            {renderCard(
+                                item,
+                                (): void => {
+                                    setEditing({ ...item });
+                                    setEditOpen(true);
+                                },
+                                (): void => handleDelete(item)
+                            )}
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
 
             <AddFAB onClick={handleAdd} />
 
