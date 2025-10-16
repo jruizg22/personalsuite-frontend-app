@@ -4,7 +4,7 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {LayoutContainer} from "./layout";
 import {appRoutes} from "./routes.tsx";
 import type {JSX} from "react";
-import type {appRoute} from "@/types.ts";
+import type {appRoute} from "@/types";
 
 import "./i18n/i18n";
 

@@ -1,7 +1,7 @@
 import {type JSX, type SyntheticEvent} from "react";
 import {Box, Tab, Tabs, type Theme} from "@mui/material";
 import {useLanguageHook} from "@/hooks";
-import type {appTab} from "@/types.ts";
+import type {appTab} from "@/types";
 
 interface Props {
     tabs: appTab[];

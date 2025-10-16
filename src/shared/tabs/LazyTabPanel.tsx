@@ -6,7 +6,7 @@ interface Props {
     children: JSX.Element;
 }
 
-export function LazyTabPanel({ value, index, children }: Props): JSX.Element | null {
+export default function LazyTabPanel({ value, index, children }: Props): JSX.Element | null {
     const [mounted, setMounted] = useState<boolean>(false);
 
     // Mount the panel when first loaded
