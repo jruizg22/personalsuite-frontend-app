@@ -1,4 +1,4 @@
-import type {language} from "@/types.ts";
+import type {language} from "@/types";
 
 export const languages: language[] = [
     {value: "en-US", label: "English (United States)"},

@@ -2,10 +2,10 @@ import {type appRoute} from "@/types";
 import {lazy, Suspense} from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsIcon from "@mui/icons-material/Settings";
-import SettingsPage from "@/pages/SettingsPage/SettingsPage.tsx";
+import SettingsPage from "@/pages/SettingsPage/SettingsPage";
 import {routes as mediaRoutes} from "@media-tracker/routes";
 import {commonKeys} from "@i18n/i18nKeys";
-import LoadingScreen from "@/shared/LoadingScreen.tsx";
+import {LoadingScreen} from "@/shared";
 
 const MainPage = lazy(() => import("./pages/MainPage/MainPage"))
 

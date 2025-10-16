@@ -1,8 +1,7 @@
 import {type JSX, type SyntheticEvent, useState} from "react";
-import TabContainer from "@/shared/tabs/TabContainer.tsx";
 import {Box} from "@mui/material";
-import type {appTab} from "@/types.ts";
-import {LazyTabPanel} from "@/shared/tabs/LazyTabPanel.tsx";
+import type {appTab} from "@/types";
+import {LazyTabPanel, TabContainer} from "@/shared/tabs";
 
 interface Props {
     tabs: appTab[]

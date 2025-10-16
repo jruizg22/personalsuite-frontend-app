@@ -1,6 +1,6 @@
 import {type JSX} from "react";
 import {useMenuActions} from "@/shared/menus/useMenuActions";
-import type {MenuAction} from "@/types.ts";
+import type {MenuAction} from "@/types";
 import {CardShared} from "@/shared/cards";
 
 interface Props<T> {
