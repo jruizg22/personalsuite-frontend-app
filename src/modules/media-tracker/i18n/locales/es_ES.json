@@ -18,6 +18,11 @@
           "title": "Eliminar canal",
           "message": "¿Seguro que deseas eliminar el canal {{channel}}?"
         }
+      },
+      "feedback": {
+        "new": "Canal creado con éxito",
+        "edit": "Canal modificado con éxito",
+        "delete": "Canal eliminado con éxito"
       }
     },
     "videos": "Vídeos",
