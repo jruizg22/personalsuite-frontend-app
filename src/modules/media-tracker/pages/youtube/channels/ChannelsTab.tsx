@@ -22,6 +22,34 @@ const initialChannels: YTChannel[] = [
     }
 ]
 
+/**
+ * ChannelsTab component.
+ *
+ * This component renders a CRUD interface for YouTube channels using the
+ * `CrudCardLayout` component. It allows users to:
+ * - Create new channels
+ * - Edit existing channels
+ * - Delete channels
+ * - Search/filter channels by name or URL
+ *
+ * The component uses `useLanguageService` for i18n translations and
+ * `mediaTrackerKeys` for the translation keys.
+ *
+ * The `CrudCardLayout` is configured with:
+ * - Titles for dialogs (New, Edit, Delete)
+ * - Snackbar feedback messages for creation, modification, and deletion
+ * - Card rendering and form rendering functions
+ * - Search/filtering options
+ *
+ * @returns {JSX.Element} A CRUD interface for managing YouTube channels.
+ *
+ * @example
+ * import ChannelsTab from "@media-tracker/pages/youtube/channels/ChannelsTab";
+ *
+ * function App() {
+ *   return <ChannelsTab />;
+ * }
+ */
 export default function ChannelsTab(): JSX.Element {
     const { t } = useLanguageService();
     const [channels, setChannels] = useState<YTChannel[]>(initialChannels);
@@ -49,6 +77,20 @@ export default function ChannelsTab(): JSX.Element {
                     channel: ch.name,
                 })
             }
+            snackbar={{
+                new: t(
+                    mediaTrackerKeys.youTube.channels.feedback.new,
+                    {ns: mediaTrackerKeys.ns, defaultValue: "Channel created successfully"}
+                ),
+                edit: t(
+                    mediaTrackerKeys.youTube.channels.feedback.edit,
+                    {ns: mediaTrackerKeys.ns, defaultValue: "Channel modified successfully"}
+                ),
+                delete: t(
+                    mediaTrackerKeys.youTube.channels.feedback.delete,
+                    {ns: mediaTrackerKeys.ns, defaultValue: "Channel deleted successfully"}
+                ),
+            }}
             createEmptyItem={() => ({
                 id: "",
                 name: "",
