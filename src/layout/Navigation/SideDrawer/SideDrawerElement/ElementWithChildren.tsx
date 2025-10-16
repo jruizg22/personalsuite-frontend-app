@@ -1,5 +1,5 @@
 import {type JSX, useState} from "react";
-import {useLanguageService} from "@/services/useLanguageService";
+import {useLanguageHook} from "@/hooks";
 import {
     ListItem,
     ListItemButton,
@@ -20,7 +20,7 @@ interface Props {
 export default function ElementWithChildren({route, handleItemClick}: Props): JSX.Element {
     const {icon, children}: appRoute = route;
     const [collapsed, setCollapsed] = useState<boolean>(false);
-    const { translateLabel } = useLanguageService();
+    const { translateLabel } = useLanguageHook();
 
     return (
         <>

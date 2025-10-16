@@ -2,7 +2,7 @@ import {AppBar, Toolbar, Typography} from "@mui/material";
 import DrawerToggleButton from "./DrawerToggleButton/DrawerToggleButton";
 import {type JSX, useEffect, useState} from "react";
 import {type Location, useLocation} from "react-router-dom";
-import {useLanguageService} from "@/services/useLanguageService";
+import {useLanguageHook} from "@/hooks";
 import {appRoutes} from "@/routes";
 import type {appRoute} from "@/types";
 import {useIsDesktop} from "@/hooks/useIsDesktop";
@@ -31,7 +31,7 @@ export default function TopBar({drawerWidth, onToggleDrawer}: Props): JSX.Elemen
     function useTopBarLabel(): string {
         const location: Location = useLocation();
         const [topBarLabel, setTopBarLabel] = useState<string>("Personal Suite");
-        const { translateLabel, i18n } = useLanguageService();
+        const { translateLabel, i18n } = useLanguageHook();
 
         useEffect((): void => {
             const routeTrail: appRoute[] | null = findRouteTrail(appRoutes, location.pathname);

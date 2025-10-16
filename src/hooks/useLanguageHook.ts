@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import type {i18nProps} from "@/types";
 
-export function useLanguageService() {
+export function useLanguageHook() {
     const { t, i18n } = useTranslation();
 
     function translateLabel({ i18nKey, i18nNs }: i18nProps, fallback: string): string {

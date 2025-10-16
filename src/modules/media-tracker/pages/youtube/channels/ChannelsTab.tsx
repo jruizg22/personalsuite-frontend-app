@@ -1,9 +1,9 @@
 import {type JSX, useState} from "react";
 import type {YTChannel} from "@media-tracker/models";
-import {useLanguageService} from "@/services/useLanguageService";
 import {mediaTrackerKeys} from "@/i18n";
-import {CrudCardLayout, CrudCardItem} from "@/shared/cards";
+import {CrudCardItem, CrudCardLayout} from "@/shared/cards";
 import {ChannelCardContent, ChannelFields} from "@media-tracker/pages/youtube/channels";
+import {useTranslation} from "react-i18next";
 
 {/*Data for testing purposes*/}
 const initialChannels: YTChannel[] = [
@@ -32,7 +32,7 @@ const initialChannels: YTChannel[] = [
  * - Delete channels
  * - Search/filter channels by name or URL
  *
- * The component uses `useLanguageService` for i18n translations and
+ * The component uses `useLanguageHook` for i18n translations and
  * `mediaTrackerKeys` for the translation keys.
  *
  * The `CrudCardLayout` is configured with:
@@ -51,7 +51,7 @@ const initialChannels: YTChannel[] = [
  * }
  */
 export default function ChannelsTab(): JSX.Element {
-    const { t } = useLanguageService();
+    const {t} = useTranslation();
     const [channels, setChannels] = useState<YTChannel[]>(initialChannels);
 
     return (

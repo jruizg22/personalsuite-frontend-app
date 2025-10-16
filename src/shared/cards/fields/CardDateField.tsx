@@ -1,8 +1,8 @@
 import {type JSX} from "react";
 import {Box, Typography, type TypographyProps} from "@mui/material";
 import DateRangeIcon from "@mui/icons-material/DateRange";
-import {useLanguageService} from "@/services/useLanguageService";
-import {DateFormats} from "@/constants/dateFormats.ts";
+import {useLanguageHook} from "@/hooks";
+import {DateFormats} from "@/constants/dateFormats";
 
 interface Props {
     date: string | Date;
@@ -17,7 +17,7 @@ export default function CardDateField({
     color = "text.secondary",
     formatOptions = DateFormats.long
 }: Props): JSX.Element {
-    const { i18n } = useLanguageService();
+    const { i18n } = useLanguageHook();
     const locale: string = i18n.language || "en";
 
     let dateObj: Date;

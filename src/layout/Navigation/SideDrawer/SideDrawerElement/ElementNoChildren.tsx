@@ -1,7 +1,7 @@
 import type {JSX} from "react";
 import {NavLink} from "react-router-dom";
 import type {appRoute} from "@/types";
-import {useLanguageService} from "@/services/useLanguageService.ts";
+import {useLanguageHook} from "@/hooks";
 import {ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 
 export default function ElementNoChildren({route, isChild, handleItemClick}: Props): JSX.Element {
     const { path, icon }: appRoute = route;
-    const { translateLabel } = useLanguageService();
+    const { translateLabel } = useLanguageHook();
 
     return (
         <ListItem disablePadding>

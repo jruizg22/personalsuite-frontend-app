@@ -1,6 +1,6 @@
 import {type JSX, type SyntheticEvent} from "react";
 import {Box, Tab, Tabs, type Theme} from "@mui/material";
-import {useLanguageService} from "@/services/useLanguageService.ts";
+import {useLanguageHook} from "@/hooks";
 import type {appTab} from "@/types.ts";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function TabContainer({tabs, value, handleChange}: Props): JSX.Element {
-    const { translateLabel } = useLanguageService();
+    const { translateLabel } = useLanguageHook();
 
     return (
         <Box>
