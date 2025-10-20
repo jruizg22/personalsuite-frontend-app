@@ -16,7 +16,7 @@ import {commonKeys} from "@/i18n";
 interface Props {
     label: string;
     date: string | undefined | null;
-    onChange: (value: string) => void;
+    onChange: (value: string | null) => void;
     required?: boolean;
     readOnly?: boolean;
 }
@@ -73,7 +73,7 @@ export default function DateFormField({
             label={label}
             type="date"
             value={formatDate(date)}
-            onChange={(e): void => onChange(e.target.value)}
+            onChange={(e): void => onChange(e.target.value === "" ? null : e.target.value)}
             onBlur={(): void => setTouched(true)}
             fullWidth
             error={error}

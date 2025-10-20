@@ -17,7 +17,7 @@ import {GeneralTextFormField, DateFormField, DescriptionFormField} from "@/share
  */
 interface Props {
     channel: YTChannel;
-    onChange: (field: keyof YTChannel, value: string) => void;
+    onChange: (field: keyof YTChannel, value: string | null) => void;
     readOnly?: boolean;
 }
 
@@ -66,7 +66,7 @@ export default function ChannelFormFields({channel, onChange, readOnly}: Props):
                     icon={<LinkIcon />}
                     label={t(commonKeys.url, { ns: commonKeys.ns, defaultValue: "URL" })}
                     content={channel.url}
-                    onChange={(value: string): void => onChange("url", value)}
+                    onChange={(value: string | null): void => onChange("url", value)}
                     readOnly={readOnly}
                 />
             </Grid>
@@ -85,7 +85,7 @@ export default function ChannelFormFields({channel, onChange, readOnly}: Props):
                             icon={<NumbersIcon/>}
                             label={t(commonKeys.id, { ns: commonKeys.ns, defaultValue: "ID" })}
                             content={channel.id}
-                            onChange={(value: string): void => onChange("id", value)}
+                            onChange={(value: string | null): void => onChange("id", value)}
                             required
                             readOnly={readOnly}
                         />
@@ -96,7 +96,7 @@ export default function ChannelFormFields({channel, onChange, readOnly}: Props):
                             icon={<PersonIcon/>}
                             label={t(commonKeys.name, { ns: commonKeys.ns, defaultValue: "Name" })}
                             content={channel.name}
-                            onChange={(value: string): void => onChange("name", value)}
+                            onChange={(value: string | null): void => onChange("name", value)}
                             required
                             readOnly={readOnly}
                         />
@@ -109,7 +109,7 @@ export default function ChannelFormFields({channel, onChange, readOnly}: Props):
                                 {ns: mediaTrackerKeys.ns, defaultValue: "Created at"}
                             )}
                             date={channel.createdAt}
-                            onChange={(value: string): void => onChange("createdAt", value)}
+                            onChange={(value: string | null): void => onChange("createdAt", value)}
                             readOnly={readOnly}
                         />
                     </Grid>
@@ -127,7 +127,7 @@ export default function ChannelFormFields({channel, onChange, readOnly}: Props):
                                 {ns: commonKeys.ns, defaultValue: "Default"}
                             )}
                             content={channel.description}
-                            onChange={(value: string): void => onChange("description", value)}
+                            onChange={(value: string | null): void => onChange("description", value)}
                             readOnly={readOnly}
                         />
                     </Grid>
