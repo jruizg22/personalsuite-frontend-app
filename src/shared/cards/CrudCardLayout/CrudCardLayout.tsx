@@ -73,8 +73,13 @@ interface Props<T extends { id: string }> {
      */
     items: T[];
 
+    /** Callback invoked to create a new item */
     onCreate: (item: Partial<T>) => Promise<void>;
+
+    /** Callback invoked to update an existing item by ID */
     onUpdate: (id: string, updated: Partial<T>) => Promise<void>;
+
+    /** Callback invoked to delete an item by ID */
     onDelete: (id: string) => Promise<void>;
 
     /**
@@ -92,11 +97,13 @@ interface Props<T extends { id: string }> {
      */
     renderForm: (item: T, onChange: (field: keyof T, value: any) => void) => JSX.Element;
 
+    /**
+     * Optional array of required fields. Used to validate the form
+     * and disable the confirm/save button if any required field is empty.
+     */
     requiredFields?: (keyof T)[];
 
-    /**
-     * Function that creates a new empty item.
-     */
+    /** Function to create a new empty item for the "new" dialog */
     createEmptyItem: () => T;
 
     /**
@@ -117,40 +124,35 @@ interface Props<T extends { id: string }> {
 }
 
 /**
- * `CrudCardLayout` is a reusable layout component for displaying CRUD items as cards.
- * It supports adding, editing, deleting items, searching, and optional snackbar feedback.
+ * `CrudCardLayout` is a reusable layout component for managing CRUD items as cards.
  *
- * @template T - Generic type for items; must have an `id` string property.
+ * Features:
+ * - Supports creating, editing, deleting items
+ * - Built-in loading screen and snackbar feedback
+ * - Optional search/filter functionality
+ * - Form validation for required fields
  *
- * @param {Object} props - Props object.
- * @param {boolean} props.loading - Flag to show loading screen if data is loading
- * @param {string} props.titleNew - Title for the "new item" dialog.
- * @param {string} props.titleEdit - Title for the "edit item" dialog.
- * @param {string} props.titleDelete - Title for the "delete item" dialog.
- * @param {(item: T) => string} props.deleteMessage - Function to generate the message for delete confirmation.
- * @param {snackBarProps} [props.snackbar] - Optional messages for snackbar notifications (`new`, `edit`, `delete`).
- * @param {T[]} props.items - Array of items to display.
- * @param {(item: T, onEdit: () => void, onDelete: () => void) => JSX.Element} props.renderCard - Function to render each item as a card.
- * @param {(item: T, onChange: (field: keyof T, value: any) => void) => JSX.Element} props.renderForm - Function to render the form inside the input dialog.
- * @param {() => T} props.createEmptyItem - Function to create a new empty item.
- * @param {Object} [props.searchProps] - Optional search configuration.
- * @param {string} props.searchProps.label - Label for the search input.
- * @param {(keyof T)[] | keyof T} props.searchProps.filterKeys - Keys of the item to filter when searching.
+ * @template T - Generic type for items; must have an `id` string property
  *
- * @returns {JSX.Element} The rendered CRUD card layout component.
+ * @param {Props<T>} props - Props for the component
+ * @returns {JSX.Element} Rendered CRUD card layout
  *
  * @example
  * <CrudCardLayout
+ *   loading={false}
  *   titleNew="Add User"
  *   titleEdit="Edit User"
  *   titleDelete="Delete User"
  *   deleteMessage={(user) => `Are you sure you want to delete ${user.name}?`}
  *   snackbar={{ new: "User created", edit: "User updated", delete: "User deleted" }}
  *   items={users}
- *   setItems={setUsers}
+ *   onCreate={async (user) => await createUser(user)}
+ *   onUpdate={async (id, updated) => await updateUser(id, updated)}
+ *   onDelete={async (id) => await deleteUser(id)}
  *   renderCard={(user, onEdit, onDelete) => <UserCard user={user} onEdit={onEdit} onDelete={onDelete} />}
  *   renderForm={(user, onChange) => <UserForm user={user} onChange={onChange} />}
  *   createEmptyItem={() => ({ id: "", name: "" })}
+ *   requiredFields={["id", "name"]}
  *   searchProps={{ label: "Search Users", filterKeys: ["name", "email"] }}
  * />
  */
@@ -171,38 +173,65 @@ export default function CrudCardLayout<T extends { id: string }>({
     createEmptyItem,
     searchProps
 }: Props<T>): JSX.Element {
+    /** Current text in the search input */
     const [searchText, setSearchText] = useState<string>("");
+
+    /** Currently selected item for deletion */
     const [selected, setSelected] = useState<T | null>(null);
+
+    /** Item currently being edited/created */
     const [editing, setEditing] = useState<T | null>(null);
+
+    /** Flag to control visibility of edit/create dialog */
     const [editOpen, setEditOpen] = useState<boolean>(false);
+
+    /** Flag to control visibility of delete confirmation dialog */
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
 
-    // Snackbar states
+    /** Snackbar visibility */
     const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+
+    /** Snackbar message */
     const [snackbarMessage, setSnackbarMessage] = useState<string>("");
 
     const {t} = useTranslation();
 
+    /** Tracks whether the current form is valid according to `requiredFields` */
     const [formValid, setFormValid] = useState<boolean>(false);
 
+    /**
+     * Validates the current form based on `requiredFields`.
+     * @param item - The item to validate
+     * @returns true if all required fields are filled, false otherwise
+     */
     function validateForm(item: T | null): boolean {
         if (!item || !requiredFields) return true;
         return requiredFields.every(f => item[f] && String(item[f]).trim() !== "");
     }
 
-    // Function to show the snackbar with a given message
+    /**
+     * Shows a snackbar with the given message
+     * @param message - Message to show in snackbar
+     */
     const showSnackbar = (message: string): void => {
         setSnackbarMessage(message);
         setSnackbarOpen(true);
     };
 
-    // Open dialog to create a new item
+    /**
+     * Opens the dialog to create a new item
+     */
     const handleAdd = (): void => {
         setEditing(createEmptyItem());
         setEditOpen(true);
     };
 
-    // Save edited item
+    /**
+     * Saves the currently editing item
+     * - Calls `onCreate` if it's a new item
+     * - Calls `onUpdate` if editing an existing item
+     * - Shows snackbar feedback messages if `snackbar` is provided
+     */
     const handleSave = async (): Promise<void> => {
         if (!editing) return;
 
@@ -220,6 +249,10 @@ export default function CrudCardLayout<T extends { id: string }>({
         }
     };
 
+    /**
+     * Confirms deletion of the selected item
+     * - Calls `onDelete` and shows snackbar feedback if `snackbar` is provided
+     */
     const handleDeleteConfirm = async (): Promise<void> => {
         if (!selected) return;
 
@@ -232,11 +265,15 @@ export default function CrudCardLayout<T extends { id: string }>({
         }
     };
 
+    /** Determines whether the currently editing item is new */
     const isNew: boolean = !editing?.id;
 
+    /** Determines if the viewport is desktop size (for dialog fullscreen behavior) */
     const isDesktop: boolean = useIsDesktop();
 
-    // Filter items based on search text
+    /**
+     * Filters the items array based on the search input
+     */
     const filteredItems: T[] =
         searchProps && searchText
             ? items.filter((item: T): boolean => {
