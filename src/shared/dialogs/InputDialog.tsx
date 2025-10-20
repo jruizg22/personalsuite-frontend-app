@@ -16,6 +16,7 @@ interface Props {
     onConfirm: () => void;
     onCancel: () => void;
     children: ReactNode;
+    confirmDisabled?: boolean;
 }
 
 export default function InputDialog({
@@ -27,6 +28,7 @@ export default function InputDialog({
     onConfirm,
     onCancel,
     children,
+    confirmDisabled = false
 }: Props): JSX.Element {
     return (
         <Dialog
@@ -43,7 +45,7 @@ export default function InputDialog({
                 <Button onClick={onCancel} color="inherit" variant="text">
                     {cancelLabel}
                 </Button>
-                <Button onClick={onConfirm} color="primary" variant="contained" autoFocus>
+                <Button onClick={onConfirm} color="primary" variant="contained" autoFocus disabled={confirmDisabled}>
                     {confirmLabel}
                 </Button>
             </DialogActions>

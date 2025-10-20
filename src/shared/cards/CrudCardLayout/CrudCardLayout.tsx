@@ -1,9 +1,12 @@
-import {type Dispatch, type JSX, type SetStateAction, useState} from "react";
-import {Box, Grid, type Theme} from "@mui/material";
-import {AddFAB, SearchField, SnackbarShared} from "@/shared";
+import {type JSX, useState} from "react";
+import {Box} from "@mui/material";
+import {AddFAB, LoadingScreen, SnackbarShared} from "@/shared";
 import {ConfirmDialog, InputDialog} from "@/shared/dialogs";
 import {useTranslation} from "react-i18next";
 import {commonKeys} from "@/i18n";
+import {SearchBarSticky} from "@/shared/SearchField";
+import {CrudCardContainer} from "@/shared/cards/CrudCardLayout";
+import {useIsDesktop} from "@/hooks";
 
 /**
  * Type for the `snackbar` field of `CrudCardLayout` props.
@@ -35,6 +38,11 @@ interface snackBarProps {
  */
 interface Props<T extends { id: string }> {
     /**
+     * Flag to show the loading screen if data is being recovered
+     */
+    loading: boolean;
+
+    /**
      * Title for the "new item" dialog.
      */
     titleNew: string;
@@ -65,10 +73,9 @@ interface Props<T extends { id: string }> {
      */
     items: T[];
 
-    /**
-     * Setter function to update the items.
-     */
-    setItems: Dispatch<SetStateAction<T[]>>;
+    onCreate: (item: Partial<T>) => Promise<void>;
+    onUpdate: (id: string, updated: Partial<T>) => Promise<void>;
+    onDelete: (id: string) => Promise<void>;
 
     /**
      * Function to render each item as a card.
@@ -84,6 +91,8 @@ interface Props<T extends { id: string }> {
      * @param onChange - Callback to update a field of the item.
      */
     renderForm: (item: T, onChange: (field: keyof T, value: any) => void) => JSX.Element;
+
+    requiredFields?: (keyof T)[];
 
     /**
      * Function that creates a new empty item.
@@ -114,13 +123,13 @@ interface Props<T extends { id: string }> {
  * @template T - Generic type for items; must have an `id` string property.
  *
  * @param {Object} props - Props object.
+ * @param {boolean} props.loading - Flag to show loading screen if data is loading
  * @param {string} props.titleNew - Title for the "new item" dialog.
  * @param {string} props.titleEdit - Title for the "edit item" dialog.
  * @param {string} props.titleDelete - Title for the "delete item" dialog.
  * @param {(item: T) => string} props.deleteMessage - Function to generate the message for delete confirmation.
  * @param {snackBarProps} [props.snackbar] - Optional messages for snackbar notifications (`new`, `edit`, `delete`).
  * @param {T[]} props.items - Array of items to display.
- * @param {(value: SetStateAction<T[]>) => void} props.setItems - Setter function for updating items.
  * @param {(item: T, onEdit: () => void, onDelete: () => void) => JSX.Element} props.renderCard - Function to render each item as a card.
  * @param {(item: T, onChange: (field: keyof T, value: any) => void) => JSX.Element} props.renderForm - Function to render the form inside the input dialog.
  * @param {() => T} props.createEmptyItem - Function to create a new empty item.
@@ -146,15 +155,19 @@ interface Props<T extends { id: string }> {
  * />
  */
 export default function CrudCardLayout<T extends { id: string }>({
+    loading,
     titleNew,
     titleEdit,
     titleDelete,
     deleteMessage,
     snackbar,
     items,
-    setItems,
+    onCreate,
+    onUpdate,
+    onDelete,
     renderCard,
     renderForm,
+    requiredFields,
     createEmptyItem,
     searchProps
 }: Props<T>): JSX.Element {
@@ -170,6 +183,13 @@ export default function CrudCardLayout<T extends { id: string }>({
 
     const {t} = useTranslation();
 
+    const [formValid, setFormValid] = useState<boolean>(false);
+
+    function validateForm(item: T | null): boolean {
+        if (!item || !requiredFields) return true;
+        return requiredFields.every(f => item[f] && String(item[f]).trim() !== "");
+    }
+
     // Function to show the snackbar with a given message
     const showSnackbar = (message: string): void => {
         setSnackbarMessage(message);
@@ -183,28 +203,38 @@ export default function CrudCardLayout<T extends { id: string }>({
     };
 
     // Save edited item
-    const handleEditSave = (item: T): void => {
-        setItems((prev: T[]): T[] => prev.map((i: T): T => (i.id === item.id ? item : i)));
-        setEditOpen(false);
-        if (snackbar) showSnackbar(snackbar.edit); // Show snackbar if provided
-    };
+    const handleSave = async (): Promise<void> => {
+        if (!editing) return;
 
-    // Open confirm dialog to delete an item
-    const handleDelete = (item: T): void => {
-        setSelected(item);
-        setConfirmOpen(true);
-    };
-
-    // Confirm deletion of item
-    const handleConfirmDelete = (): void => {
-        if (selected) {
-            setItems((prev: T[]): T[] => prev.filter((i: T): boolean => i.id !== selected.id));
-            if (snackbar) showSnackbar(snackbar.delete); // Show snackbar if provided
+        try {
+            if (isNew) {
+                await onCreate(editing);
+                if (snackbar) showSnackbar(snackbar.new);
+            } else {
+                await onUpdate(editing.id, editing);
+                if (snackbar) showSnackbar(snackbar.edit);
+            }
+        } finally {
+            setEditOpen(false);
+            setEditing(null);
         }
-        setConfirmOpen(false);
+    };
+
+    const handleDeleteConfirm = async (): Promise<void> => {
+        if (!selected) return;
+
+        try {
+            await onDelete(selected.id);
+            if (snackbar) showSnackbar(snackbar.delete);
+        } finally {
+            setConfirmOpen(false);
+            setSelected(null);
+        }
     };
 
     const isNew: boolean = !editing?.id;
+
+    const isDesktop: boolean = useIsDesktop();
 
     // Filter items based on search text
     const filteredItems: T[] =
@@ -221,49 +251,34 @@ export default function CrudCardLayout<T extends { id: string }>({
         <Box sx={{display: "flex", flexDirection: "column", flexGrow: 1}}>
             {/* Search bar (sticky at the top if provided) */}
             {searchProps && (
-                <Box
-                    sx={{
-                        position: "sticky",
-                        top: 0,
-                        zIndex: 10,
-                        backgroundColor: (theme: Theme): string => theme.palette.background.default,
-                        pt: 1,
-                        mx: 1
-                    }}
-                >
-                    <SearchField
-                        value={searchText}
-                        onChange={setSearchText}
-                        label={searchProps.label}
-                    />
-                </Box>
+                <SearchBarSticky
+                    value={searchText}
+                    onChange={setSearchText}
+                    label={searchProps.label}
+                />
             )}
 
-            {/* Container for cards with vertical scroll */}
-            <Box
-                sx={{
-                    flexGrow: 1,
-                    overflowY: "auto",
-                    display: "flex",
-                    flexDirection: "column",
-                    m: 1
-                }}
-            >
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {filteredItems.map((item: T): JSX.Element => (
-                        <Grid key={item.id} size={{ xs: 4, sm: 4, md: 4 }} sx={{ display: "flex" }}>
-                            {renderCard(
-                                item,
-                                (): void => {
-                                    setEditing({ ...item });
-                                    setEditOpen(true); // Edit dialog
-                                },
-                                (): void => handleDelete(item) // Delete dialog
-                            )}
-                        </Grid>
-                    ))}
-                </Grid>
-            </Box>
+            {/* Loading screen / Container for cards with vertical scroll */}
+            {loading ? (
+                <LoadingScreen />
+            ) : (
+                <CrudCardContainer
+                    items={filteredItems}
+                    renderCard={(item: T): JSX.Element =>
+                        renderCard(
+                            item,
+                            (): void => {
+                                setEditing({ ...item });
+                                setEditOpen(true);
+                            },
+                            (): void => {
+                                setSelected(item);
+                                setConfirmOpen(true);
+                            }
+                        )
+                    }
+                />
+            )}
 
             {/* Floating action button to add a new item */}
             <AddFAB onClick={handleAdd} />
@@ -273,28 +288,17 @@ export default function CrudCardLayout<T extends { id: string }>({
                 <InputDialog
                     open={editOpen}
                     title={isNew ? titleNew : titleEdit}
+                    fullscreen={!isDesktop}
                     confirmLabel={t(commonKeys.save, {ns: commonKeys.ns, defaultValue: "Save"})}
                     cancelLabel={t(commonKeys.cancel, {ns: commonKeys.ns, defaultValue: "Cancel"})}
-                    onConfirm={(): void => {
-                        if (editing) {
-                            if (isNew) {
-                                setItems((prev: T[]): T[] => [
-                                    ...prev,
-                                    { ...editing, id: Date.now().toString() },
-                                ]);
-                                if (snackbar) showSnackbar(snackbar.new); // Show snackbar if provided
-                            } else {
-                                handleEditSave(editing);
-                            }
-                            setEditOpen(false);
-                            setEditing(null);
-                        }
-                    }}
+                    onConfirm={handleSave}
                     onCancel={(): void => setEditOpen(false)}
+                    confirmDisabled={!formValid}
                 >
-                    {renderForm(editing, (field: keyof T, value: any): void =>
-                        setEditing((prev: T | null) => (prev ? { ...prev, [field]: value } : null))
-                    )}
+                    {renderForm(editing, (field: keyof T, value: any): void => {
+                        setEditing(prev => (prev ? { ...prev, [field]: value } : null));
+                        setFormValid(validateForm({ ...editing, [field]: value }));
+                    })}
                 </InputDialog>
             )}
 
@@ -305,7 +309,7 @@ export default function CrudCardLayout<T extends { id: string }>({
                 message={selected ? deleteMessage(selected) : ""}
                 confirmLabel={t(commonKeys.delete, {ns: commonKeys.ns, defaultValue: "Delete"})}
                 cancelLabel={t(commonKeys.cancel, {ns: commonKeys.ns, defaultValue: "Cancel"})}
-                onConfirm={handleConfirmDelete}
+                onConfirm={handleDeleteConfirm}
                 onCancel={(): void => setConfirmOpen(false)}
                 confirmButtonColor="error"
             />

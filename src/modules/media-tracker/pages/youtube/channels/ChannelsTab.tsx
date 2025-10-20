@@ -1,47 +1,42 @@
-import {type JSX, useState} from "react";
+import {type JSX} from "react";
 import type {YTChannel} from "@media-tracker/models";
 import {mediaTrackerKeys} from "@/i18n";
-import {CrudCardItem, CrudCardLayout} from "@/shared/cards";
-import {ChannelCardContent, ChannelFields} from "@media-tracker/pages/youtube/channels";
+import {CrudCardItem, CrudCardLayout} from "@/shared/cards/CrudCardLayout";
+import {ChannelCardContent, ChannelFormFields} from "@media-tracker/pages/youtube/channels";
 import {useTranslation} from "react-i18next";
-
-{/*Data for testing purposes*/}
-const initialChannels: YTChannel[] = [
-    {
-        id: "1",
-        name: "Gregoair",
-        description: "sgrgegrgegrre",
-        url: "hgswegswge",
-        createdAt: "2025-03-04",
-    },
-    {
-        id: "2",
-        name: "Revenant",
-        url: "https://www.youtube.com/@G4G_Revenantrfgeergerge",
-        createdAt: "2025-03-04",
-    }
-]
+import {useYTChannels} from "@media-tracker/hooks/youtube";
 
 /**
  * ChannelsTab component.
  *
- * This component renders a CRUD interface for YouTube channels using the
- * `CrudCardLayout` component. It allows users to:
+ * This component renders a CRUD interface for managing YouTube channels
+ * using the `CrudCardLayout` component. It allows the user to:
+ *
  * - Create new channels
  * - Edit existing channels
  * - Delete channels
- * - Search/filter channels by name or URL
+ * - Search and filter channels by name or URL
  *
- * The component uses `useLanguageHook` for i18n translations and
- * `mediaTrackerKeys` for the translation keys.
+ * Translation keys for the UI text are provided via `mediaTrackerKeys`.
+ * The component also displays snackbar feedback messages for user actions.
  *
- * The `CrudCardLayout` is configured with:
- * - Titles for dialogs (New, Edit, Delete)
- * - Snackbar feedback messages for creation, modification, and deletion
- * - Card rendering and form rendering functions
- * - Search/filtering options
+ * Props passed to `CrudCardLayout` include:
  *
- * @returns {JSX.Element} A CRUD interface for managing YouTube channels.
+ * - `loading`: Flag to show the loading state while fetching channels.
+ * - `items`: The array of channels to display (`YTChannel[]`).
+ * - `onCreate`: Callback to create a new channel.
+ * - `onUpdate`: Callback to update an existing channel by ID.
+ * - `onDelete`: Callback to delete a channel by ID.
+ * - `titleNew`, `titleEdit`, `titleDelete`: Dialog titles for create/edit/delete operations.
+ * - `deleteMessage`: Function that returns a delete confirmation message.
+ * - `snackbar`: Messages shown after create/edit/delete actions.
+ * - `createEmptyItem`: Function to generate an empty `YTChannel`.
+ * - `renderCard`: Function to render each channel card.
+ * - `renderForm`: Function to render the channel form fields inside the dialog.
+ * - `requiredFields`: Array of required field names (used for form validation).
+ * - `searchProps`: Optional configuration for search/filtering.
+ *
+ * @returns {JSX.Element} A fully functional CRUD interface for YouTube channels.
  *
  * @example
  * import ChannelsTab from "@media-tracker/pages/youtube/channels/ChannelsTab";
@@ -52,12 +47,21 @@ const initialChannels: YTChannel[] = [
  */
 export default function ChannelsTab(): JSX.Element {
     const {t} = useTranslation();
-    const [channels, setChannels] = useState<YTChannel[]>(initialChannels);
+    const {channels, loading, createChannel, updateChannel, deleteChannel} = useYTChannels();
 
     return (
         <CrudCardLayout<YTChannel>
+            loading={loading}
             items={channels}
-            setItems={setChannels}
+            onCreate={async (newChannel: Partial<YTChannel>): Promise<void> => {
+                await createChannel(newChannel);
+            }}
+            onUpdate={async (id: string, updated: Partial<YTChannel>): Promise<void> => {
+                await updateChannel(id, updated);
+            }}
+            onDelete={async (id: string): Promise<void> => {
+                await deleteChannel(id);
+            }}
             titleNew={t(
                 mediaTrackerKeys.youTube.channels.dialogs.newDialog.title,
                 {ns: mediaTrackerKeys.ns, defaultValue: "New channel"}
@@ -108,8 +112,9 @@ export default function ChannelsTab(): JSX.Element {
                 />
             )}
             renderForm={(channel: YTChannel, onChange): JSX.Element => (
-                <ChannelFields channel={channel} onChange={onChange} />
+                <ChannelFormFields channel={channel} onChange={onChange}/>
             )}
+            requiredFields={["id", "name"]}
             searchProps={{
                 label: t(mediaTrackerKeys.youTube.channels.searchChannels, {ns: mediaTrackerKeys.ns, defaultValue: "Search channels..."}),
                 filterKeys: ["name", "url"]

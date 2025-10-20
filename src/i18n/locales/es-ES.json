@@ -12,5 +12,6 @@
   "delete": "Eliminar",
   "cancel": "Cancelar",
   "save": "Guardar",
-  "New": "Nuevo"
+  "New": "Nuevo",
+  "field_requried": "{{field}} es requerido"
 }

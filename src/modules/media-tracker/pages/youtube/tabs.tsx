@@ -1,6 +1,6 @@
 import type {appTab} from "@/types";
 import {mediaTrackerKeys} from "@media-tracker/i18n/i18nKeys";
-import ChannelsTab from "@media-tracker/pages/youtube/channels/ChannelsTab.tsx";
+import {ChannelsTab} from "@media-tracker/pages/youtube/channels";
 import VideosTab from "@media-tracker/pages/youtube/videos/VideosTab/VideosTab.tsx";
 
 export const tabs: appTab[] = [

@@ -6,13 +6,56 @@ import {commonKeys, mediaTrackerKeys} from "@/i18n";
 import {Link as LinkIcon, Person as PersonIcon, Numbers as NumbersIcon} from "@mui/icons-material";
 import {GeneralTextFormField, DateFormField, DescriptionFormField} from "@/shared/forms/fields";
 
+/**
+ * Props for the ChannelFormFields component.
+ *
+ * @interface Props
+ * @property {YTChannel} channel - The YouTube channel object containing the values for each field.
+ * @property {(field: keyof YTChannel, value: string) => void} onChange - Callback invoked when a field value changes.
+ * Receives the field name as the first argument and the new value as the second argument.
+ * @property {boolean} [readOnly=false] - If true, all fields are read-only and cannot be edited.
+ */
 interface Props {
     channel: YTChannel;
     onChange: (field: keyof YTChannel, value: string) => void;
     readOnly?: boolean;
 }
 
-export default function ChannelFields({channel, onChange, readOnly}: Props): JSX.Element {
+/**
+ * ChannelFormFields component.
+ *
+ * This component renders the form fields for a YouTube channel inside
+ * a CRUD dialog. It is intended to be used within `CrudCardLayout` when
+ * creating or editing a `YTChannel`.
+ *
+ * The form layout:
+ * - URL field at the top
+ * - Two-column layout below:
+ *   - Left column: ID, Name, Created At
+ *   - Right column: Description
+ *
+ * Fields use Material UI inputs and support:
+ * - Required validation (`id` and `name`)
+ * - Read-only mode
+ * - Icons for each field for visual context
+ *
+ * Translation keys are provided via `commonKeys` and `mediaTrackerKeys`.
+ *
+ * @param {Props} props - Component props
+ * @param {YTChannel} props.channel - The channel object containing values for each field
+ * @param {(field: keyof YTChannel, value: string) => void} props.onChange - Callback invoked when a field changes
+ * @param {boolean} [props.readOnly=false] - If true, all fields are read-only
+ *
+ * @returns {JSX.Element} A grid layout of form fields for a YouTube channel
+ *
+ * @example
+ * import ChannelFormFields from "@media-tracker/pages/youtube/channels/ChannelFormFields";
+ *
+ * function MyForm({channel, onChange}: { channel: YTChannel, onChange: (field: keyof YTChannel, value: string) => void }) {
+ *   return <ChannelFormFields channel={channel} onChange={onChange} />;
+ * }
+ */
+export default function ChannelFormFields({channel, onChange, readOnly}: Props): JSX.Element {
     const {t} = useTranslation();
 
     return (
@@ -43,6 +86,7 @@ export default function ChannelFields({channel, onChange, readOnly}: Props): JSX
                             label={t(commonKeys.id, { ns: commonKeys.ns, defaultValue: "ID" })}
                             content={channel.id}
                             onChange={(value: string): void => onChange("id", value)}
+                            required
                             readOnly={readOnly}
                         />
                     </Grid>
@@ -53,6 +97,7 @@ export default function ChannelFields({channel, onChange, readOnly}: Props): JSX
                             label={t(commonKeys.name, { ns: commonKeys.ns, defaultValue: "Name" })}
                             content={channel.name}
                             onChange={(value: string): void => onChange("name", value)}
+                            required
                             readOnly={readOnly}
                         />
                     </Grid>
