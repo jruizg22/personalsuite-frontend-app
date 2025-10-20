@@ -3,12 +3,18 @@ import {TextField} from "@mui/material";
 
 interface Props {
     label: string;
-    date: string;
+    date: string | undefined | null;
     onChange: (value: string) => void;
+    readOnly?: boolean;
 }
 
-export default function DateFormField({label, date, onChange}: Props): JSX.Element {
-    const formatDate = (iso: string): string => iso.split("T")[0];
+export default function DateFormField({label, date, onChange, readOnly}: Props): JSX.Element {
+    // Safe formatter: if no date is provided, return an empty string
+    const formatDate = (iso?: string | undefined | null): string => {
+        if (!iso) return "";
+        const [datePart] = iso.split("T");
+        return datePart ?? "";
+    };
 
     return (
         <TextField
@@ -18,7 +24,10 @@ export default function DateFormField({label, date, onChange}: Props): JSX.Eleme
             onChange={(e): void => onChange(e.target.value)}
             fullWidth
             slotProps={{
-                inputLabel: { shrink: true }
+                inputLabel: { shrink: true },
+                input: {
+                    readOnly: readOnly
+                }
             }}
         />
     )

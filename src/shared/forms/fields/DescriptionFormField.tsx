@@ -4,26 +4,28 @@ import DescriptionIcon from "@mui/icons-material/Description";
 
 interface Props {
     label: string;
-    content: string;
+    content: string | undefined | null;
     onChange: (value: string) => void;
+    readOnly?: boolean;
 }
 
-export default function DescriptionFormField({
-    label,
-    content,
-    onChange,
-}: Props): JSX.Element {
+export default function DescriptionFormField({label, content, onChange, readOnly}: Props): JSX.Element {
     const inputId: string = "description-field";
 
     return (
-        <FormControl sx={{ flex: 1, height: "100%" }}>
+        <FormControl sx={{ flex: 1, height: "100%", width: "100%" }}>
             <InputLabel htmlFor={inputId}>{label}</InputLabel>
             <OutlinedInput
                 id={inputId}
                 label={label}
                 multiline
                 fullWidth
-                value={content}
+                slotProps={{
+                    input: {
+                        readOnly: readOnly
+                    }
+                }}
+                value={content ?? ""}
                 onChange={(e): void => onChange(e.target.value)}
                 startAdornment={
                     <InputAdornment

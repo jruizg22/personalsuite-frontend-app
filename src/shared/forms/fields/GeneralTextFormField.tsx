@@ -4,15 +4,16 @@ import {InputAdornment, TextField} from "@mui/material";
 interface Props {
     icon?: JSX.Element;
     label: string;
-    content: string;
+    content: string | undefined | null;
     onChange: (value: string) => void;
+    readOnly?: boolean;
 }
 
-export default function GeneralTextFormField({icon, label, content, onChange}: Props): JSX.Element {
+export default function GeneralTextFormField({icon, label, content, onChange, readOnly}: Props): JSX.Element {
     return (
         <TextField
             label={label}
-            value={content}
+            value={content ?? ""}
             onChange={(e): void => onChange(e.target.value)}
             fullWidth
             slotProps={{
@@ -24,6 +25,7 @@ export default function GeneralTextFormField({icon, label, content, onChange}: P
                             </InputAdornment>
                         ),
                     }),
+                    readOnly: readOnly
                 },
             }}
         />
