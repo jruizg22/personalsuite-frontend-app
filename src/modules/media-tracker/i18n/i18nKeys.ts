@@ -37,7 +37,28 @@ export const mediaTrackerKeys = {
                 delete: "youTube.channels.feedback.delete",
             }
         },
-        videos: "youTube.videos",
+        videos: {
+            root: "youTube.videos.videos",
+            publishedAt: "youTube.videos.published_at",
+            searchVideos: "youTube.videos.search_videos",
+            dialogs: {
+                newDialog: {
+                    title: "youTube.videos.dialogs.new_dialog.title",
+                },
+                editDialog: {
+                    title: "youTube.videos.dialogs.edit_dialog.title",
+                },
+                deleteDialog: {
+                    title: "youTube.videos.dialogs.delete_dialog.title",
+                    message: "youTube.videos.dialogs.delete_dialog.message",
+                }
+            },
+            feedback: {
+                new: "youTube.videos.feedback.new",
+                edit: "youTube.videos.feedback.edit",
+                delete: "youTube.videos.feedback.delete",
+            }
+        },
         playlists: "youTube.playlists",
     }
 } as const;

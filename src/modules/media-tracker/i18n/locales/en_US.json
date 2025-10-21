@@ -25,7 +25,28 @@
         "delete": "Channel deleted successfully"
       }
     },
-    "videos": "Videos",
+    "videos": {
+      "videos": "Videos",
+      "published_at": "Published at",
+      "search_videos": "Search videos...",
+      "dialogs": {
+        "new_dialog": {
+          "title": "New video"
+        },
+        "edit_dialog": {
+          "title": "Edit video"
+        },
+        "delete_dialog": {
+          "title": "Delete video",
+          "message": "Are you sure you want to delete the video {{video}}?"
+        }
+      },
+      "feedback": {
+        "new": "Video created successfully",
+        "edit": "Video modified successfully",
+        "delete": "Video deleted successfully"
+      }
+    },
     "playlists": "Playlists"
   }
 }

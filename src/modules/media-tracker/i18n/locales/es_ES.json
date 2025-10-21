@@ -25,7 +25,28 @@
         "delete": "Canal eliminado con éxito"
       }
     },
-    "videos": "Vídeos",
+    "videos": {
+      "videos": "Vídeos",
+      "published_at": "Publicado el",
+      "search_videos": "Buscar vídeos...",
+      "dialogs": {
+        "new_dialog": {
+          "title": "Nuevo vídeo"
+        },
+        "edit_dialog": {
+          "title": "Editar vídeo"
+        },
+        "delete_dialog": {
+          "title": "Eliminar vídeo",
+          "message": "¿Seguro que deseas eliminar el vídeo {{video}}?"
+        }
+      },
+      "feedback": {
+        "new": "Vídeo creado con éxito",
+        "edit": "Video modificado con éxito",
+        "delete": "Video eliminado con éxito"
+      }
+    },
     "playlists": "Listas de reproducción"
   }
 }
