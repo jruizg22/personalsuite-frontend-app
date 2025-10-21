@@ -5,7 +5,7 @@ export interface YTVideoView {
 }
 
 export interface YTVideo {
-    id?: string | null;
+    id: string;
     channelId: string;
     title: string;
     publishedAt?: string | null;
