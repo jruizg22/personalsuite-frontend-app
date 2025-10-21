@@ -1,8 +1,10 @@
-import type {ViewBasic} from "@media-tracker/types";
+import type {YTChannel} from "@media-tracker/models";
+import {views} from "@media-tracker/constants";
 
-export interface YTVideoView {
-    basic: ViewBasic
-}
+export const YTVideoView = {
+    BASIC: views.basic,
+    WITH_CHANNEL: views.with_channel
+} as const;
 
 export interface YTVideo {
     id: string;
@@ -11,4 +13,8 @@ export interface YTVideo {
     publishedAt?: string | null;
     description?: string | null;
     url?: string | null;
+}
+
+export interface YTVideoWithChannel extends YTVideo {
+    channel: YTChannel;
 }

@@ -6,7 +6,7 @@
  *
  * @template T - Type of the `view` property, typically an enum or string literal type.
  */
-export interface GetAllParams<T> {
+export interface GetAllParams {
     /**
      * Optional pagination offset.
      *
@@ -39,5 +39,5 @@ export interface GetAllParams<T> {
      * @example
      * { view: "basic" } // fetch basic data of the item
      */
-    view?: T;
+    view?: string;
 }

@@ -1,7 +1,7 @@
-import type {ViewBasic} from "@media-tracker/types";
+import {views} from "@media-tracker/constants";
 
-export interface YTChannelView {
-    basic: ViewBasic
+export const YTChannelView = {
+    BASIC: views.basic
 }
 
 export interface YTChannel {
