@@ -3,6 +3,8 @@ import axios from "axios";
 import type {YTChannelView, YTChannel} from "@media-tracker/models";
 import {axiosInstance} from "@/services";
 import camelcaseKeys from "camelcase-keys";
+import {useSortList} from "@/hooks";
+import type {SortOrder} from "@/types";
 
 /**
  * Options for filtering or paginating the YouTube channels request.
@@ -16,6 +18,21 @@ interface UseYTChannelsOptions {
 
     /** Optional view filter (custom enum/type defined in the model). */
     view?: YTChannelView;
+
+    /**
+     * Optional sorting configuration.
+     * - `sortBy`: The field of `YTChannel` to sort by (e.g., `"name"` or `"createdAt"`).
+     * - `sortOrder`: `"asc"` for ascending or `"desc"` for descending order.
+     *
+     * Example:
+     * ```ts
+     * sort: { sortBy: "name", sortOrder: "asc" }
+     * ```
+     */
+    sort?: {
+        sortBy: keyof YTChannel;
+        sortOrder: SortOrder;
+    }
 }
 
 /**
@@ -24,28 +41,25 @@ interface UseYTChannelsOptions {
  * This hook provides a fully reactive state for interacting with
  * the YouTube Channels API through a preconfigured Axios instance.
  *
- * It supports:
- * - Fetching channels (with pagination or filters)
- * - Creating new channels
- * - Updating existing channels
- * - Deleting channels
+ * Features:
+ * - Fetch channels from the API with optional pagination, filtering, and sorting.
+ * - Create new channels.
+ * - Update existing channels.
+ * - Delete channels.
+ * - Automatically converts API response keys from `snake_case` to `camelCase`.
+ * - Keeps the local React state (`channels`, `loading`, `error`) in sync automatically.
+ * - Supports optional sorting of channels locally.
  *
- * All API responses are automatically normalized from `snake_case`
- * to `camelCase` using `camelcase-keys`, and the local React state
- * (`channels`, `loading`, `error`) updates automatically to keep
- * the UI in sync without requiring manual refetches.
- *
- * @param {UseYTChannelsOptions} [options] - Optional configuration
- *        for pagination or filtering on the initial request.
+ * @param {UseYTChannelsOptions} [options] - Optional configuration for initial request.
  *
  * @returns {{
- *   channels: YTChannel[];
- *   loading: boolean;
- *   error: string | null;
- *   fetchChannels: (overrideOptions?: UseYTChannelsOptions) => Promise<void>;
- *   createChannel: (newChannel: Partial<YTChannel>) => Promise<void>;
- *   updateChannel: (id: string, updatedData: Partial<YTChannel>) => Promise<void>;
- *   deleteChannel: (id: string) => Promise<void>;
+ *   channels: YTChannel[]; // The current list of channels, optionally sorted.
+ *   loading: boolean; // `true` while fetching data, `false` otherwise.
+ *   error: string | null; // Error message if a request fails.
+ *   fetchChannels: (overrideOptions?: UseYTChannelsOptions) => Promise<void>; // Refetch channels with optional overrides.
+ *   createChannel: (newChannel: Partial<YTChannel>) => Promise<void>; // Create a new channel and update local state.
+ *   updateChannel: (id: string, updatedData: Partial<YTChannel>) => Promise<void>; // Update an existing channel and update local state.
+ *   deleteChannel: (id: string) => Promise<void>; // Delete a channel and remove it from local state.
  * }}
  *
  * @example
@@ -53,7 +67,9 @@ interface UseYTChannelsOptions {
  * import useYTChannels from "@media-tracker/hooks/youtube";
  *
  * function ChannelsList() {
- *   const { channels, loading, error, createChannel, deleteChannel } = useYTChannels({ limit: 10 });
+ *   const { channels, loading, error, createChannel, deleteChannel } = useYTChannels({
+ *     sort: { sortBy: "name", sortOrder: "asc" }
+ *   });
  *
  *   if (loading) return <p>Loading...</p>;
  *   if (error) return <p>Error: {error}</p>;
@@ -73,6 +89,12 @@ interface UseYTChannelsOptions {
  *   );
  * }
  * ```
+ *
+ * @remarks
+ * - Sorting is applied locally after fetching, so newly created or updated channels
+ *   will also appear in the correct order if `sort` is provided.
+ * - Null, undefined, or empty string values are always placed at the end in ascending
+ *   order and at the beginning in descending order.
  */
 export default function useYTChannels(options?: UseYTChannelsOptions) {
     const ytChannelsURL: string = "/media_tracker/api/v1/youtube/channels/"
@@ -80,6 +102,11 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
     const [channels, setChannels] = useState<YTChannel[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+
+    const sortedChannels: YTChannel[] = useSortList(channels, {
+        sortBy: options?.sort?.sortBy,
+        sortOrder: options?.sort?.sortOrder
+    });
 
     /**
      * Fetches YouTube channels from the API, optionally with pagination or filters.
@@ -191,7 +218,7 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
     }, [options?.offset, options?.limit, options?.view]);
 
     return {
-        channels,
+        channels: sortedChannels,
         loading,
         error,
         fetchChannels,

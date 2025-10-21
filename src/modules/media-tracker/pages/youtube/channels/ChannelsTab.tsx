@@ -47,7 +47,12 @@ import {useYTChannels} from "@media-tracker/hooks/youtube";
  */
 export default function ChannelsTab(): JSX.Element {
     const {t} = useTranslation();
-    const {channels, loading, createChannel, updateChannel, deleteChannel} = useYTChannels();
+    const {channels, loading, createChannel, updateChannel, deleteChannel} = useYTChannels({
+        sort: {
+            sortBy: "name",
+            sortOrder: "asc"
+        }
+    });
 
     return (
         <CrudCardLayout<YTChannel>
@@ -100,7 +105,7 @@ export default function ChannelsTab(): JSX.Element {
                 name: "",
                 url: "",
                 description: "",
-                createdAt: new Date().toISOString(),
+                createdAt: "",
             })}
             renderCard={(channel: YTChannel, onEdit: () => void, onDelete: () => void): JSX.Element => (
                 <CrudCardItem

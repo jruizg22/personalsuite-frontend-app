@@ -182,6 +182,9 @@ export default function CrudCardLayout<T extends { id: string }>({
     /** Item currently being edited/created */
     const [editing, setEditing] = useState<T | null>(null);
 
+    /** Flag to control creation of a new item */
+    const [isNew, setIsNew] = useState<boolean>(false);
+
     /** Flag to control visibility of edit/create dialog */
     const [editOpen, setEditOpen] = useState<boolean>(false);
 
@@ -223,6 +226,7 @@ export default function CrudCardLayout<T extends { id: string }>({
      */
     const handleAdd = (): void => {
         setEditing(createEmptyItem());
+        setIsNew(true);
         setEditOpen(true);
     };
 
@@ -246,6 +250,7 @@ export default function CrudCardLayout<T extends { id: string }>({
         } finally {
             setEditOpen(false);
             setEditing(null);
+            setIsNew(false);
         }
     };
 
@@ -264,9 +269,6 @@ export default function CrudCardLayout<T extends { id: string }>({
             setSelected(null);
         }
     };
-
-    /** Determines whether the currently editing item is new */
-    const isNew: boolean = !editing?.id;
 
     /** Determines if the viewport is desktop size (for dialog fullscreen behavior) */
     const isDesktop: boolean = useIsDesktop();
