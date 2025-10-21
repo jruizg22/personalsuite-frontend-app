@@ -100,7 +100,7 @@ export default function ChannelsTab(): JSX.Element {
                     {ns: mediaTrackerKeys.ns, defaultValue: "Channel deleted successfully"}
                 ),
             }}
-            createEmptyItem={() => ({
+            createEmptyItem={(): YTChannel => ({
                 id: "",
                 name: "",
                 url: "",
@@ -122,7 +122,7 @@ export default function ChannelsTab(): JSX.Element {
             requiredFields={["id", "name"]}
             searchProps={{
                 label: t(mediaTrackerKeys.youTube.channels.searchChannels, {ns: mediaTrackerKeys.ns, defaultValue: "Search channels..."}),
-                filterKeys: ["name", "url"]
+                filterKeys: ["name"]
             }}
         />
     );
