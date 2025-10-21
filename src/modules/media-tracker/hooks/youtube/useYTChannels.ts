@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import type {YTChannel, YTChannelView} from "@media-tracker/models";
+import type {YTChannel} from "@media-tracker/models";
 import {axiosInstance} from "@/services";
 import camelcaseKeys from "camelcase-keys";
 import {useSortList} from "@/hooks";
@@ -12,7 +12,7 @@ import {mediaTrackerEndpoints} from "@media-tracker/constants";
  */
 interface UseYTChannelsOptions {
     /** Pagination / filter options */
-    getAllParams?: GetAllParams<YTChannelView>;
+    getAllParams?: GetAllParams;
 
     /** Optional local sorting configuration */
     sort?: SortOptions<YTChannel>
