@@ -10,8 +10,12 @@ interface Props {
 export default function ChannelCardContent({channel}: Props): JSX.Element {
     return (
         <CardContent>
-            <CardLinkField url={channel.url} truncate/>
-            <CardDateField date={channel.createdAt}/>
+            {channel.url && (
+                <CardLinkField url={channel.url} truncate/>
+            )}
+            {channel.createdAt && (
+                <CardDateField date={channel.createdAt}/>
+            )}
             {channel.description && (
                 <CardTextField text={channel.description} showIcon/>
             )}

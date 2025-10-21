@@ -187,7 +187,7 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
      * Automatically fetch channels on mount or when pagination/view changes.
      */
     useEffect((): void => {
-        fetchChannels();
+        void fetchChannels();
     }, [options?.offset, options?.limit, options?.view]);
 
     return {
