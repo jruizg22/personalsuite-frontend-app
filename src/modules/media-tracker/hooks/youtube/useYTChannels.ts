@@ -1,38 +1,21 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import type {YTChannelView, YTChannel} from "@media-tracker/models";
+import type {YTChannel, YTChannelView} from "@media-tracker/models";
 import {axiosInstance} from "@/services";
 import camelcaseKeys from "camelcase-keys";
 import {useSortList} from "@/hooks";
-import type {SortOrder} from "@/types";
+import type {GetAllParams, SortOptions} from "@/types";
+import {mediaTrackerEndpoints} from "@media-tracker/constants";
 
 /**
  * Options for filtering or paginating the YouTube channels request.
  */
 interface UseYTChannelsOptions {
-    /** Optional pagination offset (number of items to skip). */
-    offset?: number;
+    /** Pagination / filter options */
+    getAllParams?: GetAllParams<YTChannelView>;
 
-    /** Optional limit on how many items to retrieve. */
-    limit?: number;
-
-    /** Optional view filter (custom enum/type defined in the model). */
-    view?: YTChannelView;
-
-    /**
-     * Optional sorting configuration.
-     * - `sortBy`: The field of `YTChannel` to sort by (e.g., `"name"` or `"createdAt"`).
-     * - `sortOrder`: `"asc"` for ascending or `"desc"` for descending order.
-     *
-     * Example:
-     * ```ts
-     * sort: { sortBy: "name", sortOrder: "asc" }
-     * ```
-     */
-    sort?: {
-        sortBy: keyof YTChannel;
-        sortOrder: SortOrder;
-    }
+    /** Optional local sorting configuration */
+    sort?: SortOptions<YTChannel>
 }
 
 /**
@@ -97,8 +80,6 @@ interface UseYTChannelsOptions {
  *   order and at the beginning in descending order.
  */
 export default function useYTChannels(options?: UseYTChannelsOptions) {
-    const ytChannelsURL: string = "/media_tracker/api/v1/youtube/channels/"
-
     const [channels, setChannels] = useState<YTChannel[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -128,8 +109,12 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
         setError(null);
 
         try {
-            const params = { ...options, ...overrideOptions };
-            const res = await axiosInstance.get(ytChannelsURL, { params });
+            const combinedOptions = { ...options, ...overrideOptions };
+            const params = combinedOptions?.getAllParams;
+
+            const res = await axiosInstance.get(mediaTrackerEndpoints.v1.youTube.channels, {
+                params
+            });
 
             const formatted: YTChannel[] = camelcaseKeys(res.data, { deep: true });
             setChannels(formatted);
@@ -156,7 +141,7 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
      */
     const createChannel = async (newChannel: Partial<YTChannel>): Promise<void> => {
         try {
-            const res = await axiosInstance.post(ytChannelsURL, newChannel);
+            const res = await axiosInstance.post(mediaTrackerEndpoints.v1.youTube.channels, newChannel);
             const formatted: YTChannel = camelcaseKeys(res.data, { deep: true });
             setChannels(prev => [...prev, formatted]);
         } catch (err: any) {
@@ -180,7 +165,7 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
      */
     const updateChannel = async (id: string, updatedData: Partial<YTChannel>): Promise<void> => {
         try {
-            const res = await axiosInstance.put(`${ytChannelsURL}${id}`, updatedData);
+            const res = await axiosInstance.put(`${mediaTrackerEndpoints.v1.youTube.channels}${id}`, updatedData);
             const formatted: YTChannel = camelcaseKeys(res.data, { deep: true });
             setChannels(prev => prev.map(ch => (ch.id === id ? formatted : ch)));
         } catch (err: any) {
@@ -203,7 +188,7 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
      */
     const deleteChannel = async (id: string): Promise<void> => {
         try {
-            await axiosInstance.delete(`${ytChannelsURL}${id}`);
+            await axiosInstance.delete(`${mediaTrackerEndpoints.v1.youTube.channels}${id}`);
             setChannels(prev => prev.filter(ch => ch.id !== id));
         } catch (err: any) {
             setError(err.response?.data?.detail || "Error deleting channel");
@@ -215,7 +200,7 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
      */
     useEffect((): void => {
         void fetchChannels();
-    }, [options?.offset, options?.limit, options?.view]);
+    }, [options?.getAllParams?.offset, options?.getAllParams?.limit, options?.getAllParams?.view]);
 
     return {
         channels: sortedChannels,
