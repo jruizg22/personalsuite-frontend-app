@@ -1,10 +1,23 @@
+import type {SortOrder} from "./";
+
 /**
  * Parameters for fetching a collection of items from an API.
  *
- * This interface is generic to allow specifying a type for `view`,
- * which represents the level of detail of the item(s) retrieved
+ * This interface defines a common contract for endpoints that
+ * support pagination, view filtering, and sorting. It can be
+ * extended or used directly as query parameters for REST requests.
  *
- * @template T - Type of the `view` property, typically an enum or string literal type.
+ * Each property is optional, allowing flexible combinations
+ * depending on the endpoint’s capabilities.
+ *
+ * @example
+ * // Example: Fetch 10 videos starting from item 20, with basic view
+ * const params: GetAllParams = {
+ *   offset: 20,
+ *   limit: 10,
+ *   view: "basic",
+ *   order_by: "asc",
+ * };
  */
 export interface GetAllParams {
     /**
@@ -32,12 +45,32 @@ export interface GetAllParams {
     /**
      * Optional view parameter.
      *
-     * Can be used to specify the level of detail of the item retrieved.
-     * The type `T` allows this to be strongly typed,
-     * for example as an enum of allowed views.
+     * Used to specify the level of detail or representation
+     * of the item(s) retrieved.
+     *
+     * The valid values typically come from a `views` constant
+     * (e.g., `"basic"`, `"with_channel"`, etc.).
      *
      * @example
-     * { view: "basic" } // fetch basic data of the item
+     * { view: "basic" } // Fetch only basic fields
+     * @example
+     * { view: "with_channel" } // Fetch including channel details
      */
     view?: string;
+
+    /**
+     * Optional sort direction for ordered results.
+     *
+     * Determines whether the API should return items
+     * in ascending (`"asc"`) or descending (`"desc"`) order.
+     *
+     * The backend is responsible for applying this order,
+     * usually mapping it to a SQL `ORDER BY` clause.
+     *
+     * @example
+     * { order_by: "asc" } // Sort results ascendingly
+     * @example
+     * { order_by: "desc" } // Sort results descendingly
+     */
+    order_by?: SortOrder;
 }

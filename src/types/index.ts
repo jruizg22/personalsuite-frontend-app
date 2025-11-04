@@ -1,8 +1,7 @@
-export * from "./language";
-export * from "./i18nProps";
-export * from "./appRoute";
-export * from "./appTab";
-export * from "./menuAction";
-export * from "./sortOrder";
-export * from "./sortOptions";
-export * from "./getAllParams";
+export type {language} from "./language";
+export type {i18nProps} from "./i18nProps";
+export type {appRoute} from "./appRoute";
+export type {appTab} from "./appTab";
+export type {MenuAction} from "./menuAction";
+export type {SortOrder} from "./sortOrder";
+export type {GetAllParams} from "./getAllParams";

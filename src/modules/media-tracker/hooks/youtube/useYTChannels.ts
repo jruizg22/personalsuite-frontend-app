@@ -1,21 +1,17 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
+import {type AxiosError} from "axios";
 import type {YTChannel} from "@media-tracker/models";
 import {axiosInstance} from "@/services";
 import camelcaseKeys from "camelcase-keys";
-import {useSortList} from "@/hooks";
-import type {GetAllParams, SortOptions} from "@/types";
+import type {GetAllParams} from "@/types";
 import {mediaTrackerEndpoints} from "@media-tracker/constants";
 
 /**
  * Options for filtering or paginating the YouTube channels request.
  */
 interface UseYTChannelsOptions {
-    /** Pagination / filter options */
+    /** Pagination, filtering and sorting options */
     getAllParams?: GetAllParams;
-
-    /** Optional local sorting configuration */
-    sort?: SortOptions<YTChannel>
 }
 
 /**
@@ -31,12 +27,11 @@ interface UseYTChannelsOptions {
  * - Delete channels.
  * - Automatically converts API response keys from `snake_case` to `camelCase`.
  * - Keeps the local React state (`channels`, `loading`, `error`) in sync automatically.
- * - Supports optional sorting of channels locally.
  *
  * @param {UseYTChannelsOptions} [options] - Optional configuration for initial request.
  *
  * @returns {{
- *   channels: YTChannel[]; // The current list of channels, optionally sorted.
+ *   channels: YTChannel[]; // The current list of channels.
  *   loading: boolean; // `true` while fetching data, `false` otherwise.
  *   error: string | null; // Error message if a request fails.
  *   fetchChannels: (overrideOptions?: UseYTChannelsOptions) => Promise<void>; // Refetch channels with optional overrides.
@@ -51,7 +46,7 @@ interface UseYTChannelsOptions {
  *
  * function ChannelsList() {
  *   const { channels, loading, error, createChannel, deleteChannel } = useYTChannels({
- *     sort: { sortBy: "name", sortOrder: "asc" }
+ *     getAllParams: {offset: 0, limit: 100, view: 'basic', order_by: 'asc'}
  *   });
  *
  *   if (loading) return <p>Loading...</p>;
@@ -72,22 +67,11 @@ interface UseYTChannelsOptions {
  *   );
  * }
  * ```
- *
- * @remarks
- * - Sorting is applied locally after fetching, so newly created or updated channels
- *   will also appear in the correct order if `sort` is provided.
- * - Null, undefined, or empty string values are always placed at the end in ascending
- *   order and at the beginning in descending order.
  */
 export default function useYTChannels(options?: UseYTChannelsOptions) {
     const [channels, setChannels] = useState<YTChannel[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-
-    const sortedChannels: YTChannel[] = useSortList(channels, {
-        sortBy: options?.sort?.sortBy,
-        sortOrder: options?.sort?.sortOrder
-    });
 
     /**
      * Fetches YouTube channels from the API, optionally with pagination or filters.
@@ -119,10 +103,8 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
             const formatted: YTChannel[] = camelcaseKeys(res.data, { deep: true });
             setChannels(formatted);
         } catch (err: any) {
-            const message: string = axios.isAxiosError(err) && err.response?.data?.detail
-                ? err.response.data.detail
-                : "Unknown error";
-            setError(message);
+            const error = err as AxiosError<{ detail?: string }>;
+            setError(error.response?.data?.detail || "Error fetching channels");
         } finally {
             setLoading(false);
         }
@@ -145,7 +127,8 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
             const formatted: YTChannel = camelcaseKeys(res.data, { deep: true });
             setChannels(prev => [...prev, formatted]);
         } catch (err: any) {
-            setError(err.response?.data?.detail || "Error creating channel");
+            const error = err as AxiosError<{ detail?: string }>;
+            setError(error.response?.data?.detail || "Error creating channel");
         }
     };
 
@@ -169,7 +152,8 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
             const formatted: YTChannel = camelcaseKeys(res.data, { deep: true });
             setChannels(prev => prev.map(ch => (ch.id === id ? formatted : ch)));
         } catch (err: any) {
-            setError(err.response?.data?.detail || "Error updating channel");
+            const error = err as AxiosError<{ detail?: string }>;
+            setError(error.response?.data?.detail || "Error updating channel");
         }
     };
 
@@ -191,19 +175,25 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
             await axiosInstance.delete(`${mediaTrackerEndpoints.v1.youTube.channels}${id}`);
             setChannels(prev => prev.filter(ch => ch.id !== id));
         } catch (err: any) {
-            setError(err.response?.data?.detail || "Error deleting channel");
+            const error = err as AxiosError<{ detail?: string }>;
+            setError(error.response?.data?.detail || "Error deleting channel");
         }
     };
 
     /**
-     * Automatically fetch channels on mount or when pagination/view changes.
+     * Automatically fetch channels on mount or when pagination/view/sorting changes.
      */
     useEffect((): void => {
         void fetchChannels();
-    }, [options?.getAllParams?.offset, options?.getAllParams?.limit, options?.getAllParams?.view]);
+    }, [
+        options?.getAllParams?.offset,
+        options?.getAllParams?.limit,
+        options?.getAllParams?.view,
+        options?.getAllParams?.order_by
+    ]);
 
     return {
-        channels: sortedChannels,
+        channels,
         loading,
         error,
         fetchChannels,
