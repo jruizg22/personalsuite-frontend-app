@@ -1,4 +1,5 @@
 export const views = {
     basic: "basic",
-    with_channel: "with_channel"
+    withChannel: "with_channel",
+    withVideos: "with_videos"
 } as const;

@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
 import {type AxiosError} from "axios";
-import type {YTChannel} from "@media-tracker/models";
+import type {YTChannel, YTChannelWithVideos} from "@media-tracker/models";
 import {axiosInstance} from "@/services";
 import camelcaseKeys from "camelcase-keys";
 import type {GetAllParams} from "@/types";
-import {mediaTrackerEndpoints} from "@media-tracker/constants";
+import {mediaTrackerEndpoints, views} from "@media-tracker/constants";
 
 /**
  * Options for filtering or paginating the YouTube channels request.
@@ -70,6 +70,7 @@ interface UseYTChannelsOptions {
  */
 export default function useYTChannels(options?: UseYTChannelsOptions) {
     const [channels, setChannels] = useState<YTChannel[]>([]);
+    const [channelsWithVideos, setChannelsWithVideos] = useState<YTChannelWithVideos[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -105,6 +106,86 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
         } catch (err: any) {
             const error = err as AxiosError<{ detail?: string }>;
             setError(error.response?.data?.detail || "Error fetching channels");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Fetches all YouTube channels along with their associated videos.
+     *
+     * This function retrieves channels from the API, where each channel includes
+     * a nested list of its corresponding YouTube videos. It’s especially useful
+     * for scenarios where you want to display channels grouped with their videos,
+     * avoiding redundant or repeated channel data in memory.
+     *
+     * The function automatically updates the local React state (`channelsWithVideos`, `loading`, `error`)
+     * and handles the entire request lifecycle.
+     *
+     * @async
+     * @function fetchChannelsWithVideos
+     * @param {UseYTChannelsOptions} [overrideOptions] - Optional parameters to override the defaults,
+     * including pagination or sorting options.
+     *
+     * @returns {Promise<void>} Resolves when the request completes.
+     *
+     * @example
+     * ```tsx
+     * import useYTChannels from "@media-tracker/hooks/youtube";
+     * import { views } from "@media-tracker/constants";
+     *
+     * function ChannelsWithVideos() {
+     *   const { channelsWithVideos, fetchChannelsWithVideos } = useYTChannels();
+     *
+     *   useEffect(() => {
+     *     void fetchChannelsWithVideos({
+     *       getAllParams: { offset: 0, limit: 50, view: views.with_videos, order_by: "asc" }
+     *     });
+     *   }, []);
+     *
+     *   return (
+     *     <div>
+     *       {channelsWithVideos.map(ch => (
+     *         <div key={ch.id}>
+     *           <h3>{ch.name}</h3>
+     *           <ul>
+     *             {ch.videos.map(v => (
+     *               <li key={v.id}>{v.title}</li>
+     *             ))}
+     *           </ul>
+     *         </div>
+     *       ))}
+     *     </div>
+     *   );
+     * }
+     * ```
+     *
+     * @remarks
+     * - This method assumes the backend supports a `view` (e.g. `"with_videos"`) that expands
+     *   each channel with its related video list.
+     * - Automatically converts response keys to `camelCase`.
+     * - Useful for grouped rendering or data visualization.
+     */
+    const fetchChannelsWithVideos = async (overrideOptions?: UseYTChannelsOptions): Promise<void> => {
+        setLoading(true);
+        setError(null);
+
+        const combinedOptions = { ...options, ...overrideOptions };
+        const finalParams: GetAllParams = {
+            ...combinedOptions?.getAllParams,
+            view: views.withVideos
+        };
+
+        try {
+            const res = await axiosInstance.get(mediaTrackerEndpoints.v1.youTube.channels, {
+                params: finalParams
+            });
+
+            const formatted: YTChannelWithVideos[] = camelcaseKeys(res.data, { deep: true });
+            setChannelsWithVideos(formatted);
+        } catch (err: any) {
+            const error = err as AxiosError<{ detail?: string }>;
+            setError(error.response?.data?.detail || "Error fetching channels with videos");
         } finally {
             setLoading(false);
         }
@@ -184,7 +265,7 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
      * Automatically fetch channels on mount or when pagination/view/sorting changes.
      */
     useEffect((): void => {
-        void fetchChannels();
+        void fetchChannelsWithVideos();
     }, [
         options?.getAllParams?.offset,
         options?.getAllParams?.limit,
@@ -194,9 +275,11 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
 
     return {
         channels,
+        channelsWithVideos,
         loading,
         error,
         fetchChannels,
+        fetchChannelsWithVideos,
         createChannel,
         updateChannel,
         deleteChannel,
