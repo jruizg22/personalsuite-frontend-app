@@ -279,7 +279,7 @@ export default function useYTVideos(options?: UseYTVideosOptions) {
      * Automatically fetch videos on mount or when pagination/view/sorting changes.
      */
     useEffect((): void => {
-        void fetchVideosWithChannel();
+        void fetchVideos();
     }, [
         options?.getAllParams?.offset,
         options?.getAllParams?.limit,
