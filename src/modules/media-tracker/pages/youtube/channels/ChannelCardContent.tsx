@@ -17,7 +17,7 @@ export default function ChannelCardContent({channel}: Props): JSX.Element {
                 <CardDateField date={channel.createdAt}/>
             )}
             {channel.description && (
-                <CardTextField text={channel.description} showIcon/>
+                <CardTextField text={channel.description}/>
             )}
         </CardContent>
     )

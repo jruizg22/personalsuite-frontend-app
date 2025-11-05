@@ -47,17 +47,12 @@ import {useYTChannels} from "@media-tracker/hooks/youtube";
  */
 export default function ChannelsTab(): JSX.Element {
     const {t} = useTranslation();
-    const {channels, loading, createChannel, updateChannel, deleteChannel} = useYTChannels({
-        sort: {
-            sortBy: "name",
-            sortOrder: "asc"
-        }
-    });
+    const {channelsWithVideos, loading, createChannel, updateChannel, deleteChannel} = useYTChannels({});
 
     return (
         <CrudCardLayout<YTChannel>
             loading={loading}
-            items={channels}
+            items={channelsWithVideos}
             onCreate={async (newChannel: Partial<YTChannel>): Promise<void> => {
                 await createChannel(newChannel);
             }}
