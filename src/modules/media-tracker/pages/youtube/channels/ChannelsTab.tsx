@@ -4,7 +4,7 @@ import {mediaTrackerKeys} from "@/i18n";
 import {CrudCardItem, CrudCardLayout} from "@/shared/cards/CrudCardLayout";
 import {ChannelCardContent, ChannelFormFields} from "@media-tracker/pages/youtube/channels";
 import {useTranslation} from "react-i18next";
-import {useYTChannels} from "@media-tracker/hooks/youtube";
+import {useYouTubeContext} from "@media-tracker/contexts";
 
 /**
  * ChannelsTab component.
@@ -47,12 +47,12 @@ import {useYTChannels} from "@media-tracker/hooks/youtube";
  */
 export default function ChannelsTab(): JSX.Element {
     const {t} = useTranslation();
-    const {channelsWithVideos, loading, createChannel, updateChannel, deleteChannel} = useYTChannels({});
+    const {data, loading, createChannel, updateChannel, deleteChannel} = useYouTubeContext();
 
     return (
         <CrudCardLayout<YTChannel>
             loading={loading}
-            items={channelsWithVideos}
+            items={data.channels}
             onCreate={async (newChannel: Partial<YTChannel>): Promise<void> => {
                 await createChannel(newChannel);
             }}
