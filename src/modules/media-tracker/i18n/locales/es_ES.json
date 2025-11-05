@@ -5,6 +5,7 @@
     "youTube": "YouTube",
     "channels": {
       "channels": "Canales",
+      "channel": "Canal",
       "created_at": "Fecha de creación",
       "search_channels": "Buscar canales...",
       "dialogs": {
@@ -27,6 +28,8 @@
     },
     "videos": {
       "videos": "Vídeos",
+      "video": "Vídeo",
+      "title": "Título",
       "published_at": "Publicado el",
       "search_videos": "Buscar vídeos...",
       "dialogs": {

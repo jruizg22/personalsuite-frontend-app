@@ -17,6 +17,7 @@ export const mediaTrackerKeys = {
         root: "youTube.youTube",
         channels: {
             root: "youTube.channels.channels",
+            channel: "youTube.channels.channel",
             createdAt: "youTube.channels.created_at",
             searchChannels: "youTube.channels.search_channels",
             dialogs: {
@@ -39,6 +40,8 @@ export const mediaTrackerKeys = {
         },
         videos: {
             root: "youTube.videos.videos",
+            title: "youTube.videos.title",
+            video: "youTube.videos.video",
             publishedAt: "youTube.videos.published_at",
             searchVideos: "youTube.videos.search_videos",
             dialogs: {
