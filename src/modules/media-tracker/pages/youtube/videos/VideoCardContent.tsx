@@ -64,7 +64,9 @@ export default function VideoCardContent({video}: Props): JSX.Element {
     return (
         <CardItemContent>
             {/* Channel name with icon */}
-            <CardTextField text={video.channel.name} icon={<PersonIcon/>}/>
+            {video.channel.url && (
+                <CardLinkField url={video.channel.url} label={video.channel.name} icon={<PersonIcon/>} underline={false} truncate/>
+            )}
 
             {/* Optional video URL */}
             {video.url && (

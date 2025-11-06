@@ -65,6 +65,11 @@ export default function CardTextField({
                 sx={{
                     overflowWrap: "anywhere",
                     wordBreak: "break-word",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 3,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                 }}
             >
                 {text}
