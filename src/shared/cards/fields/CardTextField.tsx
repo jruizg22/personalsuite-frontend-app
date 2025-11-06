@@ -26,7 +26,7 @@ interface Props {
  * Displays a short piece of text with an optional leading icon.
  * Designed for use inside Material UI Cards or list items.
  *
- * 🧩 Features:
+ * Features:
  * - Properly aligns the icon with multi-line text (top-aligned).
  * - Uses MUI's system props for consistency and theming.
  * - Clones and normalizes the icon style.
