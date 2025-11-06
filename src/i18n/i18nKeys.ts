@@ -23,6 +23,7 @@ export const commonKeys = {
     name: "name",
     url: "url",
     description: "description",
+    details: "details",
     edit: "edit",
     delete: "delete",
     cancel: "cancel",

@@ -8,6 +8,7 @@
   "name": "Nombre",
   "url": "Enlace",
   "description": "Descripción",
+  "details": "Detalles",
   "edit": "Editar",
   "delete": "Eliminar",
   "cancel": "Cancelar",
