@@ -14,5 +14,6 @@
   "cancel": "Cancel",
   "save": "Save",
   "new": "New",
+  "close": "Close",
   "field_required": "{{field}} is required"
 }

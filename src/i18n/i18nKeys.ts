@@ -29,5 +29,6 @@ export const commonKeys = {
     cancel: "cancel",
     save: "save",
     new: "new",
+    close: "close",
     field_required: "field_required"
 } as const;
