@@ -9,6 +9,9 @@
       "created_at": "Created at",
       "search_channels": "Search channels...",
       "dialogs": {
+        "view_dialog": {
+          "title": "Channel details"
+        },
         "new_dialog": {
           "title": "New channel"
         },
@@ -33,6 +36,9 @@
       "published_at": "Published at",
       "search_videos": "Search videos...",
       "dialogs": {
+        "view_dialog": {
+          "title": "Video details"
+        },
         "new_dialog": {
           "title": "New video"
         },

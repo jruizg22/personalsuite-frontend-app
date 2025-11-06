@@ -21,6 +21,9 @@ export const mediaTrackerKeys = {
             createdAt: "youTube.channels.created_at",
             searchChannels: "youTube.channels.search_channels",
             dialogs: {
+                viewDialog: {
+                    title: "youTube.channels.dialogs.view_dialog.title",
+                },
                 newDialog: {
                     title: "youTube.channels.dialogs.new_dialog.title",
                 },
