@@ -1,6 +1,12 @@
 import {useEffect, useState} from "react";
 import {type AxiosError} from "axios";
-import type {YTVideo, YTVideoWithChannel} from "@media-tracker/models";
+import {
+    type YTVideo,
+    type YTVideoAPI,
+    YTVideoToAPICreate,
+    YTVideoToAPIUpdate,
+    type YTVideoWithChannel
+} from "@media-tracker/models";
 import {axiosInstance} from "@/services";
 import camelcaseKeys from "camelcase-keys";
 import type {GetAllParams} from "@/types";
@@ -209,16 +215,18 @@ export default function useYTVideos(options?: UseYTVideosOptions) {
      * Creates a new YouTube video and appends it to the local state.
      *
      * @async
-     * @param {Partial<YTVideo>} newVideo - The video data to create.
+     * @param {Partial<YTVideo>} newVideo - The video data to create. Must include required fields: `id`, `channelId`, `title`.
      * @returns {Promise<void>} Resolves when the request completes.
      *
      * @remarks
+     * - Uses `YTVideoToAPICreate` to transform the payload into the API format (`snake_case`).
      * - Automatically merges the new video into local state upon success.
      * - Sets an error message in case of failure.
      */
     const createVideo = async (newVideo: Partial<YTVideo>): Promise<void> => {
         try {
-            const res = await axiosInstance.post(mediaTrackerEndpoints.v1.youTube.videos, newVideo);
+            const payload: YTVideoAPI = YTVideoToAPICreate(newVideo);
+            const res = await axiosInstance.post(mediaTrackerEndpoints.v1.youTube.videos, payload);
             const formatted: YTVideo = camelcaseKeys(res.data, { deep: true });
             setVideos(prev => [...prev, formatted]);
         } catch (err: any) {
@@ -230,20 +238,20 @@ export default function useYTVideos(options?: UseYTVideosOptions) {
     /**
      * Updates an existing YouTube video by ID.
      *
-     * Automatically updates the corresponding item in the local state.
-     *
      * @async
      * @param {string} id - The video's unique identifier.
-     * @param {Partial<YTVideo>} updatedData - The fields to update.
+     * @param {Partial<YTVideo>} updatedData - The fields to update. Only provided fields will be sent to the API.
      * @returns {Promise<void>} Resolves when the request completes.
      *
      * @remarks
-     * - Automatically replaces the old video with the updated one in state.
+     * - Uses `YTVideoToAPIUpdate` to transform only the provided fields to API format (`snake_case`).
+     * - Automatically replaces the old video with the updated one in local state.
      * - Sets an error message in case of failure.
      */
     const updateVideo = async (id: string, updatedData: Partial<YTVideo>): Promise<void> => {
         try {
-            const res = await axiosInstance.put(`${mediaTrackerEndpoints.v1.youTube.videos}${id}`, updatedData);
+            const payload: Partial<YTVideoAPI> = YTVideoToAPIUpdate(updatedData);
+            const res = await axiosInstance.put(`${mediaTrackerEndpoints.v1.youTube.videos}${id}`, payload);
             const formatted: YTVideo = camelcaseKeys(res.data, { deep: true });
             setVideos(prev => prev.map(ch => (ch.id === id ? formatted : ch)));
         } catch (err: any) {

@@ -1,6 +1,6 @@
-import {createContext, type JSX, type ReactNode, useContext, useMemo, useEffect} from "react";
+import {createContext, type JSX, type ReactNode, useContext, useMemo} from "react";
 import {useYTChannels, useYTVideos} from "@media-tracker/hooks";
-import type {YTData, YTChannel, YTVideo} from "@media-tracker/models";
+import type {YTChannel, YTData, YTVideo} from "@media-tracker/models";
 
 /**
  * Context value structure for YouTube data and CRUD operations.
@@ -78,12 +78,6 @@ export function YouTubeProvider({ children }: { children: ReactNode }): JSX.Elem
             })),
         };
     }, [ytChannels.channels, ytVideos.videos]);
-
-    // Load data on mount if not already done
-    useEffect((): void => {
-        if (ytChannels.channels.length === 0) void ytChannels.fetchChannels();
-        if (ytVideos.videos.length === 0) void ytVideos.fetchVideos();
-    }, []);
 
     return (
         <YouTubeContext.Provider

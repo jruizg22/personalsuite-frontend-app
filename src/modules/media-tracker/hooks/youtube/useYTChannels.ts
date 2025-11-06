@@ -1,6 +1,12 @@
 import {useEffect, useState} from "react";
 import {type AxiosError} from "axios";
-import type {YTChannel, YTChannelWithVideos} from "@media-tracker/models";
+import {
+    type YTChannel,
+    type YTChannelWithVideos,
+    type YTChannelAPI,
+    YTChannelToAPICreate,
+    YTChannelToAPIUpdate
+} from "@media-tracker/models";
 import {axiosInstance} from "@/services";
 import camelcaseKeys from "camelcase-keys";
 import type {GetAllParams} from "@/types";
@@ -195,16 +201,44 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
      * Creates a new YouTube channel and appends it to the local state.
      *
      * @async
-     * @param {Partial<YTChannel>} newChannel - The channel data to create.
-     * @returns {Promise<void>} Resolves when the request completes.
+     * @function createChannel
+     * @param {Partial<YTChannel>} newChannel - Partial channel data used to create a new record.
+     * Must include at least the required fields (`id`, `name`).
+     * @returns {Promise<void>} Resolves when the API request completes successfully.
+     *
+     * @description
+     * This method sends a `POST` request to the YouTube Channels API endpoint with a payload
+     * formatted according to the backend specification (`snake_case` keys via {@link YTChannelAPI}).
+     *
+     * Upon successful creation:
+     * - The new channel is automatically merged into the local state using `setChannels`.
+     * - The API response is converted back to `camelCase` using `camelcaseKeys` for frontend consistency.
+     *
+     * If the request fails, an error message is stored in the `error` state.
+     *
+     * @example
+     * ```ts
+     * await createChannel({
+     *   id: "UC12345",
+     *   name: "My Tech Channel",
+     *   description: "Tech reviews and tutorials",
+     *   url: "https://www.youtube.com/@mytechchannel",
+     *   createdAt: "2025-01-20"
+     * });
+     * // Adds the new channel to the local state automatically.
+     * ```
+     *
+     * @throws {AxiosError} If the API request fails.
+     * The error message is stored internally in the state (`setError`).
      *
      * @remarks
-     * - Automatically merges the new channel into local state upon success.
-     * - Sets an error message in case of failure.
+     * - Relies on {@link YTChannelToAPICreate} for API payload transformation.
+     * - Keeps the local state synchronized with backend data.
      */
     const createChannel = async (newChannel: Partial<YTChannel>): Promise<void> => {
         try {
-            const res = await axiosInstance.post(mediaTrackerEndpoints.v1.youTube.channels, newChannel);
+            const payload: YTChannelAPI = YTChannelToAPICreate(newChannel);
+            const res = await axiosInstance.post(mediaTrackerEndpoints.v1.youTube.channels, payload);
             const formatted: YTChannel = camelcaseKeys(res.data, { deep: true });
             setChannels(prev => [...prev, formatted]);
         } catch (err: any) {
@@ -214,22 +248,44 @@ export default function useYTChannels(options?: UseYTChannelsOptions) {
     };
 
     /**
-     * Updates an existing YouTube channel by ID.
-     *
-     * Automatically updates the corresponding item in the local state.
+     * Updates an existing YouTube channel by its unique identifier.
      *
      * @async
-     * @param {string} id - The channel's unique identifier.
-     * @param {Partial<YTChannel>} updatedData - The fields to update.
-     * @returns {Promise<void>} Resolves when the request completes.
+     * @function updateChannel
+     * @param {string} id - The channel’s unique identifier (e.g., YouTube channel ID).
+     * @param {Partial<YTChannel>} updatedData - Partial channel data containing only the fields to update.
+     * @returns {Promise<void>} Resolves when the API request completes successfully.
+     *
+     * @description
+     * Sends a `PUT` request to the YouTube Channels API endpoint to update the specified channel.
+     * Only the provided fields are included in the request payload (thanks to {@link YTChannelToAPIUpdate}).
+     *
+     * Upon success:
+     * - The corresponding channel in the local state is replaced with the updated one.
+     * - The backend response is normalized back to `camelCase` for internal use.
+     *
+     * If the request fails, an error message is stored in the `error` state.
+     *
+     * @example
+     * ```ts
+     * await updateChannel("UC12345", {
+     *   name: "My Tech Channel Plus",
+     *   description: "Updated description with new content focus."
+     * });
+     * // Updates the channel locally after a successful API response.
+     * ```
+     *
+     * @throws {AxiosError} If the API request fails.
+     * The error message is stored internally in the state (`setError`).
      *
      * @remarks
-     * - Automatically replaces the old channel with the updated one in state.
-     * - Sets an error message in case of failure.
+     * - Uses {@link YTChannelToAPIUpdate} to ensure only modified fields are sent to the backend.
+     * - The API response is normalized with `camelcaseKeys` for frontend compatibility.
      */
     const updateChannel = async (id: string, updatedData: Partial<YTChannel>): Promise<void> => {
         try {
-            const res = await axiosInstance.put(`${mediaTrackerEndpoints.v1.youTube.channels}${id}`, updatedData);
+            const payload: Partial<YTChannelAPI> = YTChannelToAPIUpdate(updatedData);
+            const res = await axiosInstance.put(`${mediaTrackerEndpoints.v1.youTube.channels}${id}`, payload);
             const formatted: YTChannel = camelcaseKeys(res.data, { deep: true });
             setChannels(prev => prev.map(ch => (ch.id === id ? formatted : ch)));
         } catch (err: any) {
