@@ -1,7 +1,7 @@
 import {type JSX} from "react";
 import {Card, CardHeader, type CardProps, Tooltip} from "@mui/material";
 import type {MenuAction} from "@/types";
-import ThreeDotMenu from "@/shared/menus/three-dot-menu/ThreeDotMenu.tsx";
+import {ThreeDotMenu} from "@/shared/menus";
 
 /**
  * `CardShared` component.
