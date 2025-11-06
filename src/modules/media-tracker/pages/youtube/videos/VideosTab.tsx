@@ -92,6 +92,10 @@ export default function VideosTab(): JSX.Element {
             }}
 
             /** Dialog titles for CRUD actions */
+            titleView={t(
+                mediaTrackerKeys.youTube.videos.dialogs.viewDialog.title,
+                {ns: mediaTrackerKeys.ns, defaultValue: "Channel details"}
+            )}
             titleNew={t(
                 mediaTrackerKeys.youTube.videos.dialogs.newDialog.title,
                 {ns: mediaTrackerKeys.ns, defaultValue: "New video"}
@@ -148,19 +152,20 @@ export default function VideosTab(): JSX.Element {
             })}
 
             /** Renders each video card */
-            renderCard={(video: YTVideoWithChannel, onEdit: () => void, onDelete: () => void): JSX.Element => (
+            renderCard={(video: YTVideoWithChannel, onView: () => void, onEdit: () => void, onDelete: () => void): JSX.Element => (
                 <CrudCardItem
                     item={video}
                     getTitle={(vi: YTVideo): string => vi.title}
                     renderContent={(vi: YTVideoWithChannel): JSX.Element => <VideoCardContent video={vi} />}
+                    onView={onView}
                     onEdit={onEdit}
                     onDelete={onDelete}
                 />
             )}
 
             /** Renders the video creation/edit form */
-            renderForm={(video: YTVideo, onChange): JSX.Element => (
-                <VideoFormFields video={video} onChange={onChange}/>
+            renderForm={(video: YTVideo, onChange, readOnly): JSX.Element => (
+                <VideoFormFields video={video} onChange={onChange} readOnly={readOnly}/>
             )}
 
             /** List of required fields before submission */

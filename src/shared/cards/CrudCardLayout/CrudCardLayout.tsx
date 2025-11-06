@@ -43,6 +43,11 @@ interface Props<T extends { id: string }> {
     loading: boolean;
 
     /**
+     * Title for the "view" dialog.
+     */
+    titleView: string;
+
+    /**
      * Title for the "new item" dialog.
      */
     titleNew: string;
@@ -85,17 +90,22 @@ interface Props<T extends { id: string }> {
     /**
      * Function to render each item as a card.
      * @param item - The item to render.
+     * @param onView - Callback to view this item in detail.
      * @param onEdit - Callback to edit this item.
      * @param onDelete - Callback to delete this item.
      */
-    renderCard: (item: T, onEdit: () => void, onDelete: () => void) => JSX.Element;
+    renderCard: (item: T, onView: () => void, onEdit: () => void, onDelete: () => void) => JSX.Element;
 
     /**
      * Function to render the form inside the input dialog.
      * @param item - The current item.
      * @param onChange - Callback to update a field of the item.
      */
-    renderForm: (item: T, onChange: (field: keyof T, value: any) => void) => JSX.Element;
+    renderForm: (
+        item: T,
+        onChange: (field: keyof T, value: any) => void,
+        readOnly?: boolean
+    ) => JSX.Element;
 
     /**
      * Optional array of required fields. Used to validate the form
@@ -159,6 +169,7 @@ interface Props<T extends { id: string }> {
 export default function CrudCardLayout<T extends { id: string }>({
     loading,
     titleNew,
+    titleView,
     titleEdit,
     titleDelete,
     deleteMessage,
@@ -184,6 +195,9 @@ export default function CrudCardLayout<T extends { id: string }>({
 
     /** Flag to control creation of a new item */
     const [isNew, setIsNew] = useState<boolean>(false);
+
+    /** Whether the current dialog is read-only (View mode) */
+    const [isView, setIsView] = useState<boolean>(false);
 
     /** Flag to control visibility of edit/create dialog */
     const [editOpen, setEditOpen] = useState<boolean>(false);
@@ -306,10 +320,19 @@ export default function CrudCardLayout<T extends { id: string }>({
                     renderCard={(item: T): JSX.Element =>
                         renderCard(
                             item,
+                            // VIEW HANDLER
                             (): void => {
                                 setEditing({ ...item });
+                                setIsView(true);
                                 setEditOpen(true);
                             },
+                            // EDIT HANDLER
+                            (): void => {
+                                setEditing({ ...item });
+                                setIsView(false);
+                                setEditOpen(true);
+                            },
+                            // DELETE HANDLER
                             (): void => {
                                 setSelected(item);
                                 setConfirmOpen(true);
@@ -326,18 +349,34 @@ export default function CrudCardLayout<T extends { id: string }>({
             {editing && (
                 <InputDialog
                     open={editOpen}
-                    title={isNew ? titleNew : titleEdit}
+                    title={
+                        isView
+                            ? titleView ?? t(commonKeys.details, { ns: commonKeys.ns, defaultValue: "Details" })
+                            : isNew
+                                ? titleNew
+                                : titleEdit
+                    }
+                    readOnly={isView}
                     fullscreen={!isDesktop}
                     confirmLabel={t(commonKeys.save, {ns: commonKeys.ns, defaultValue: "Save"})}
                     cancelLabel={t(commonKeys.cancel, {ns: commonKeys.ns, defaultValue: "Cancel"})}
                     onConfirm={handleSave}
-                    onCancel={(): void => setEditOpen(false)}
+                    onCancel={(): void => {
+                        setEditOpen(false);
+                        setEditing(null);
+                        setIsNew(false);
+                        setIsView(false);
+                    }}
                     confirmDisabled={!formValid}
                 >
-                    {renderForm(editing, (field: keyof T, value: any): void => {
-                        setEditing(prev => (prev ? { ...prev, [field]: value } : null));
-                        setFormValid(validateForm({ ...editing, [field]: value }));
-                    })}
+                    {renderForm(
+                        editing,
+                        (field: keyof T, value: any): void => {
+                            setEditing(prev => (prev ? { ...prev, [field]: value } : null));
+                            setFormValid(validateForm({ ...editing, [field]: value }));
+                        },
+                        isView
+                    )}
                 </InputDialog>
             )}
 

@@ -48,6 +48,9 @@ export const mediaTrackerKeys = {
             publishedAt: "youTube.videos.published_at",
             searchVideos: "youTube.videos.search_videos",
             dialogs: {
+                viewDialog: {
+                    title: "youTube.channels.dialogs.view_dialog.title",
+                },
                 newDialog: {
                     title: "youTube.videos.dialogs.new_dialog.title",
                 },

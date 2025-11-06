@@ -62,6 +62,10 @@ export default function ChannelsTab(): JSX.Element {
             onDelete={async (id: string): Promise<void> => {
                 await deleteChannel(id);
             }}
+            titleView={t(
+                mediaTrackerKeys.youTube.channels.dialogs.viewDialog.title,
+                {ns: mediaTrackerKeys.ns, defaultValue: "Channel details"}
+            )}
             titleNew={t(
                 mediaTrackerKeys.youTube.channels.dialogs.newDialog.title,
                 {ns: mediaTrackerKeys.ns, defaultValue: "New channel"}
@@ -102,17 +106,18 @@ export default function ChannelsTab(): JSX.Element {
                 description: "",
                 createdAt: "",
             })}
-            renderCard={(channel: YTChannel, onEdit: () => void, onDelete: () => void): JSX.Element => (
+            renderCard={(channel: YTChannel, onView: () => void, onEdit: () => void, onDelete: () => void): JSX.Element => (
                 <CrudCardItem
                     item={channel}
                     getTitle={(ch: YTChannel): string => ch.name}
                     renderContent={(ch: YTChannel): JSX.Element => <ChannelCardContent channel={ch} />}
+                    onView={onView}
                     onEdit={onEdit}
                     onDelete={onDelete}
                 />
             )}
-            renderForm={(channel: YTChannel, onChange): JSX.Element => (
-                <ChannelFormFields channel={channel} onChange={onChange}/>
+            renderForm={(channel: YTChannel, onChange, readOnly): JSX.Element => (
+                <ChannelFormFields channel={channel} onChange={onChange} readOnly={readOnly}/>
             )}
             requiredFields={["id", "name"]}
             searchProps={{
