@@ -73,6 +73,8 @@ interface Props<T> {
  * - Validates required fields, showing a red error state if left empty after blur.
  * - Localized helper text is automatically displayed when invalid.
  * - Fully controlled component — expects `value` and `onChange` from the parent.
+ * - When `readOnly` is `true`, renders a simple non-editable `TextField`
+ * showing the selected label instead of the full autocomplete control.
  */
 export default function AutocompleteField<T extends string | number>({
     label,
@@ -100,6 +102,27 @@ export default function AutocompleteField<T extends string | number>({
     const selectedOption: SelectOption<T> | null =
         options.find((opt: SelectOption<T>): boolean => opt.value === value) ?? null;
 
+    // When readOnly, render a plain TextField instead of the Autocomplete
+    if (readOnly) {
+        return (
+            <TextField
+                id={id}
+                label={label}
+                value={selectedOption?.label ?? ""}
+                fullWidth
+                slotProps={{
+                    input: {
+                        readOnly: readOnly
+                    },
+                }}
+                variant="outlined"
+                placeholder={placeholder}
+                // keep consistency with the editable field's style
+            />
+        );
+    }
+
+    // Default interactive Autocomplete
     return (
         <Autocomplete
             id={id}
