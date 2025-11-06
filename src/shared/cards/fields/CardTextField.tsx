@@ -21,10 +21,15 @@ interface Props {
 }
 
 /**
- * CardTextField — A compact text + icon component
+ * **CardTextField — A compact text + icon component**
  *
  * Displays a short piece of text with an optional leading icon.
  * Designed for use inside Material UI Cards or list items.
+ *
+ * 🧩 Features:
+ * - Properly aligns the icon with multi-line text (top-aligned).
+ * - Uses MUI's system props for consistency and theming.
+ * - Clones and normalizes the icon style.
  */
 export default function CardTextField({
     text,
@@ -38,16 +43,32 @@ export default function CardTextField({
         cloneElement(icon, {
             fontSize: "small",
             sx: {
-                flexShrink: 0, // prevent icon from shrinking in flex layouts
-                color: "text.secondary",
-                ...(icon.props.sx || {}), // preserve custom user styles
+                mt: "2px", // nudge down slightly to align better with text top
+                flexShrink: 0,
+                color,
+                ...(icon.props.sx || {}),
             },
         });
 
     return (
-        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color }}>
+        <Box
+            sx={{
+                display: "flex",
+                alignItems: "flex-start", // top-align icon with text
+                gap: 0.5,
+                color,
+            }}
+        >
             {styledIcon}
-            <Typography variant={variant}>{text}</Typography>
+            <Typography
+                variant={variant}
+                sx={{
+                    overflowWrap: "anywhere",
+                    wordBreak: "break-word",
+                }}
+            >
+                {text}
+            </Typography>
         </Box>
     );
 }
