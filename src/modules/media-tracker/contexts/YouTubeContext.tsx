@@ -1,14 +1,17 @@
 import {createContext, type JSX, type ReactNode, useContext, useMemo} from "react";
-import {useYTChannels, useYTVideos} from "@media-tracker/hooks";
-import type {YTChannel, YTData, YTVideo} from "@media-tracker/models";
+import {useYTChannels, useYTVideos, useYTVideoVisualizations} from "@media-tracker/hooks";
+import type {YTChannel, YTVideo, YTVideoFull, YTVideoVisualization} from "@media-tracker/models";
 
 /**
  * Context value structure for YouTube data and CRUD operations.
  * Centralizes access to channels, videos, and combined views.
  */
 interface YouTubeContextValue {
-    /** Root YouTube data structure */
-    data: YTData;
+    /** Normalized & derived data */
+    channels: YTChannel[];
+    videos: YTVideo[];
+    videoVisualizations: YTVideoVisualization[];
+    videosFull: YTVideoFull[];
 
     /** State flags */
     loading: boolean;
@@ -26,6 +29,13 @@ interface YouTubeContextValue {
     createVideo: ReturnType<typeof useYTVideos>["createVideo"];
     updateVideo: ReturnType<typeof useYTVideos>["updateVideo"];
     deleteVideo: ReturnType<typeof useYTVideos>["deleteVideo"];
+
+    // CRUD: Video visualizations
+    fetchVideoVisualizations: ReturnType<typeof useYTVideoVisualizations>["fetchVideoVisualizations"];
+    fetchVideoVisualizationsByVideo: ReturnType<typeof useYTVideoVisualizations>["fetchVideoVisualizationsByVideo"];
+    createVideoVisualization: ReturnType<typeof useYTVideoVisualizations>["createVideoVisualization"];
+    updateVideoVisualization: ReturnType<typeof useYTVideoVisualizations>["updateVideoVisualization"];
+    deleteVideoVisualization: ReturnType<typeof useYTVideoVisualizations>["deleteVideoVisualization"];
 }
 
 /**
@@ -46,43 +56,126 @@ const YouTubeContext = createContext<YouTubeContextValue | null>(null);
 export function YouTubeProvider({ children }: { children: ReactNode }): JSX.Element {
     const ytChannels = useYTChannels();
     const ytVideos = useYTVideos();
+    const ytVideoVisualizations = useYTVideoVisualizations();
 
     // Unified flags
     const loading: boolean = ytChannels.loading || ytVideos.loading;
     const error: string | null = ytChannels.error || ytVideos.error;
 
     /**
-     * Build a unified YouTube data tree.
-     * Efficiently links each channel to its corresponding videos.
+     * Memoized list of YouTube channels.
      *
-     * ⚡ This is O(n + m): builds a lookup map so we don’t do nested loops.
-     * ⚡ Does NOT clone videos or channels — only references.
+     * @description
+     * Derives a shallow-copied array of channels from the `useYTChannels` hook
+     * to ensure referential stability and avoid unintended side effects.
+     *
+     * ---
+     * ### Why memoize?
+     * React’s `useMemo` ensures that the array reference only changes when
+     * `ytChannels.channels` updates, preventing unnecessary re-renders
+     * in components consuming this context.
+     *
+     * @dependencies `[ytChannels.channels]`
+     * @returns {YTChannel[]} Stable, shallow-copied list of YouTube channels.
      */
-    const data: YTData = useMemo<YTData>(() => {
-        if (!ytChannels.channels.length) {
-            return { channels: [] };
-        }
+    const channels: YTChannel[] = useMemo<YTChannel[]>((): YTChannel[] => {
+        return ytChannels.channels.map(ch => ({
+            ...ch
+        }));
+    }, [ytChannels.channels]);
 
-        const videosByChannel = new Map<string, YTVideo[]>();
+    /**
+     * Memoized list of YouTube videos.
+     *
+     * @description
+     * Creates a shallow-copied array of videos from the `useYTVideos` hook.
+     * This ensures that the `videos` array remains referentially stable,
+     * allowing dependent `useMemo` computations (like `videosFull`)
+     * to only re-run when the underlying data changes.
+     *
+     * @dependencies `[ytVideos.videos]`
+     * @returns {YTVideo[]} Stable, shallow-copied list of YouTube videos.
+     */
+    const videos: YTVideo[] = useMemo<YTVideo[]>((): YTVideo[] => {
+        return ytVideos.videos.map(vi => ({
+            ...vi
+        }));
+    }, [ytVideos.videos]);
 
-        for (const video of ytVideos.videos) {
-            const list: YTVideo[] = videosByChannel.get(video.channelId) ?? [];
-            list.push(video);
-            videosByChannel.set(video.channelId, list);
-        }
+    /**
+     * Memoized list of YouTube video visualizations.
+     *
+     * @description
+     * Derives a shallow-copied list of all video visualizations
+     * from the `useYTVideoVisualizations` hook.
+     * This guarantees consistency and referential stability when
+     * combining visualizations into `videosFull`.
+     *
+     * @dependencies `[ytVideoVisualizations.videoVisualizations]`
+     * @returns {YTVideoVisualization[]} Stable list of video visualizations.
+     */
+    const videoVisualizations: YTVideoVisualization[] = useMemo<YTVideoVisualization[]>((): YTVideoVisualization[] => {
+        return ytVideoVisualizations.videoVisualizations.map(vi => ({
+            ...vi
+        }));
+    }, [ytVideoVisualizations.videoVisualizations]);
 
-        return {
-            channels: ytChannels.channels.map((ch: YTChannel) => ({
-                ...ch,
-                videos: videosByChannel.get(ch.id) ?? [],
-            })),
-        };
-    }, [ytChannels.channels, ytVideos.videos]);
+    /**
+     * Derived, memoized list of full YouTube video entities (`YTVideoFull`).
+     *
+     * @description
+     * Combines base video data (`videos`) with its corresponding
+     * channel (`channels`) and visualizations (`videoVisualizations`)
+     * into a single enriched structure.
+     *
+     * - Ensures referential stability via `useMemo`.
+     * - Automatically provides a fallback “Unknown channel” object
+     *   when the linked channel cannot be found.
+     * - Filters visualizations per video to populate `video.visualizations`.
+     *
+     * ---
+     * ### Example structure:
+     * ```ts
+     * {
+     *   id: "abc123",
+     *   title: "My Video",
+     *   channel: { id: "ch01", name: "Tech Explained", ... },
+     *   visualizations: [{ id: 1, date: "2025-01-01", ... }]
+     * }
+     * ```
+     *
+     * @dependencies `[videos, channels, videoVisualizations]`
+     * @returns {YTVideoFull[]} Fully enriched list of videos with related data.
+     */
+    const videosFull: YTVideoFull[] = useMemo(() => {
+        return videos.map(video => {
+            const channel: YTChannel | undefined = channels.find(ch => ch.id === video.channelId);
+
+            const visualizations: YTVideoVisualization[] = videoVisualizations.filter(
+                vis => vis.videoId === video.id
+            );
+
+            return {
+                ...video,
+                channel: channel ?? {
+                    id: video.channelId,
+                    name: "Unknown channel",
+                    url: "",
+                    description: "",
+                    createdAt: ""
+                },
+                visualizations
+            };
+        });
+    }, [videos, channels, videoVisualizations]);
 
     return (
         <YouTubeContext.Provider
             value={{
-                data,
+                channels,
+                videos,
+                videoVisualizations,
+                videosFull,
                 loading,
                 error,
                 fetchChannels: ytChannels.fetchChannels,
@@ -94,6 +187,11 @@ export function YouTubeProvider({ children }: { children: ReactNode }): JSX.Elem
                 createVideo: ytVideos.createVideo,
                 updateVideo: ytVideos.updateVideo,
                 deleteVideo: ytVideos.deleteVideo,
+                fetchVideoVisualizations: ytVideoVisualizations.fetchVideoVisualizations,
+                fetchVideoVisualizationsByVideo: ytVideoVisualizations.fetchVideoVisualizationsByVideo,
+                createVideoVisualization: ytVideoVisualizations.createVideoVisualization,
+                updateVideoVisualization: ytVideoVisualizations.updateVideoVisualization,
+                deleteVideoVisualization: ytVideoVisualizations.deleteVideoVisualization
             }}
         >
             {children}

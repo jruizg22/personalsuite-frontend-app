@@ -1,6 +1,6 @@
-import {type JSX, useMemo} from "react";
+import {type JSX} from "react";
 import {useTranslation} from "react-i18next";
-import {type YTVideo, type YTVideoWithChannel} from "@media-tracker/models";
+import {type YTVideo, type YTVideoFull} from "@media-tracker/models";
 import {mediaTrackerKeys} from "@media-tracker/i18n/i18nKeys";
 import {CrudCardItem, CrudCardLayout} from "@/shared/cards/CrudCardLayout";
 import {VideoCardContent, VideoFormFields} from "@media-tracker/pages/youtube/videos";
@@ -50,31 +50,15 @@ import {useYouTubeContext} from "@media-tracker/contexts";
  */
 export default function VideosTab(): JSX.Element {
     const {t} = useTranslation();
-    const {data, loading, createVideo, updateVideo, deleteVideo} = useYouTubeContext();
-
-    /**
-     * Combines all videos with their corresponding channel metadata.
-     *
-     * @remarks
-     * - Uses `useMemo` to efficiently compute a flattened list of videos.
-     * - Ensures re-computation only occurs when the channel list changes.
-     */
-    const videosWithChannel: YTVideoWithChannel[] = useMemo<YTVideoWithChannel[]>(() => {
-        return data.channels.flatMap(channel =>
-            channel.videos.map(video => ({
-                ...video,
-                channel,
-            }))
-        );
-    }, [data.channels]);
+    const {videosFull, loading, createVideo, updateVideo, deleteVideo} = useYouTubeContext();
 
     return (
-        <CrudCardLayout<YTVideoWithChannel>
+        <CrudCardLayout<YTVideoFull>
             /** Global loading indicator */
             loading={loading}
 
             /** List of all videos with channel information */
-            items={videosWithChannel}
+            items={videosFull}
 
             /** Handles video creation */
             onCreate={async (newVideo: Partial<YTVideo>): Promise<void> => {
@@ -135,7 +119,7 @@ export default function VideosTab(): JSX.Element {
             }}
 
             /** Default empty video structure for creation */
-            createEmptyItem={(): YTVideoWithChannel => ({
+            createEmptyItem={(): YTVideoFull => ({
                 id: "",
                 channelId: "",
                 title: "",
@@ -148,15 +132,16 @@ export default function VideosTab(): JSX.Element {
                     url: "",
                     description: "",
                     createdAt: ""
-                }
+                },
+                visualizations: []
             })}
 
             /** Renders each video card */
-            renderCard={(video: YTVideoWithChannel, onView: () => void, onEdit: () => void, onDelete: () => void): JSX.Element => (
+            renderCard={(video: YTVideoFull, onView: () => void, onEdit: () => void, onDelete: () => void): JSX.Element => (
                 <CrudCardItem
                     item={video}
                     getTitle={(vi: YTVideo): string => vi.title}
-                    renderContent={(vi: YTVideoWithChannel): JSX.Element => <VideoCardContent video={vi} />}
+                    renderContent={(vi: YTVideoFull): JSX.Element => <VideoCardContent video={vi} />}
                     onView={onView}
                     onEdit={onEdit}
                     onDelete={onDelete}

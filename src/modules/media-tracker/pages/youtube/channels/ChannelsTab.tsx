@@ -47,12 +47,12 @@ import {useYouTubeContext} from "@media-tracker/contexts";
  */
 export default function ChannelsTab(): JSX.Element {
     const {t} = useTranslation();
-    const {data, loading, createChannel, updateChannel, deleteChannel} = useYouTubeContext();
+    const {channels, loading, createChannel, updateChannel, deleteChannel} = useYouTubeContext();
 
     return (
         <CrudCardLayout<YTChannel>
             loading={loading}
-            items={data.channels}
+            items={channels}
             onCreate={async (newChannel: Partial<YTChannel>): Promise<void> => {
                 await createChannel(newChannel);
             }}
