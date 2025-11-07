@@ -253,7 +253,7 @@ export default function useYTVideos(options?: UseYTVideosOptions) {
             const payload: Partial<YTVideoAPI> = YTVideoToAPIUpdate(updatedData);
             const res = await axiosInstance.put(`${mediaTrackerEndpoints.v1.youTube.videos}${id}`, payload);
             const formatted: YTVideo = camelcaseKeys(res.data, { deep: true });
-            setVideos(prev => prev.map(ch => (ch.id === id ? formatted : ch)));
+            setVideos(prev => prev.map(vi => (vi.id === id ? formatted : vi)));
         } catch (err: any) {
             const error = err as AxiosError<{ detail?: string }>;
             setError(error.response?.data?.detail || "Error updating video");
@@ -276,7 +276,7 @@ export default function useYTVideos(options?: UseYTVideosOptions) {
     const deleteVideo = async (id: string): Promise<void> => {
         try {
             await axiosInstance.delete(`${mediaTrackerEndpoints.v1.youTube.videos}${id}`);
-            setVideos(prev => prev.filter(ch => ch.id !== id));
+            setVideos(prev => prev.filter(vi => vi.id !== id));
         } catch (err: any) {
             const error = err as AxiosError<{ detail?: string }>;
             setError(error.response?.data?.detail || "Error deleting video");
