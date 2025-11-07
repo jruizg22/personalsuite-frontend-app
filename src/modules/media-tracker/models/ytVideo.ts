@@ -1,4 +1,4 @@
-import type {YTChannel} from "@media-tracker/models";
+import type {YTChannel, YTVideoVisualization} from "@media-tracker/models";
 
 /**
  * Represents a YouTube video entity within the application.
@@ -82,3 +82,9 @@ export interface YTVideo {
 export interface YTVideoWithChannel extends YTVideo {
     channel: YTChannel;
 }
+
+export interface YTVideoWithVisualizations extends YTVideo {
+    visualizations: YTVideoVisualization[];
+}
+
+export interface YTVideoFull extends YTVideoWithChannel, YTVideoWithVisualizations {}
