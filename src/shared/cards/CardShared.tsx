@@ -101,7 +101,7 @@ export default function CardShared({
                  * (by line clamp or ellipsis), users can still read the full title on hover.
                  */
                 title={
-                    <Tooltip title={headerTitle}>
+                    <Tooltip title={headerTitle} placement="bottom">
                         <span>{headerTitle}</span>
                     </Tooltip>
                 }
@@ -116,13 +116,11 @@ export default function CardShared({
                      * the header from the card's main content.
                      */
                     borderBottom: theme => `1px solid ${theme.palette.divider}`,
-                    // Apply fixed header height if specified
-                    ...(headerHeight && {
-                        minHeight: `${headerHeight}px`,
-                        maxHeight: `${headerHeight}px`,
-                    }),
+                    // Si no se define manualmente, usa altura estándar
+                    minHeight: headerHeight ?? (isMultiLine ? 90 : 64),
+                    maxHeight: headerHeight ?? (isMultiLine ? 90 : 64),
                     // Align header text vertically depending on the number of lines
-                    alignItems: isMultiLine ? "flex-start" : "center",
+                    alignItems: "center",
                     "& .MuiCardHeader-content": {
                         overflow: "hidden",
                         display: "block",
