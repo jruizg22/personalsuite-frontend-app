@@ -11,7 +11,7 @@
       "channel_link": "Enlace al canal",
       "dialogs": {
         "view_dialog": {
-          "title": "Detalles del vídeo"
+          "title": "Detalles del canal"
         },
         "new_dialog": {
           "title": "Nuevo canal"

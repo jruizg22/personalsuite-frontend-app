@@ -78,7 +78,7 @@ export default function VideosTab(): JSX.Element {
             /** Dialog titles for CRUD actions */
             titleView={t(
                 mediaTrackerKeys.youTube.videos.dialogs.viewDialog.title,
-                {ns: mediaTrackerKeys.ns, defaultValue: "Channel details"}
+                {ns: mediaTrackerKeys.ns, defaultValue: "Video details"}
             )}
             titleNew={t(
                 mediaTrackerKeys.youTube.videos.dialogs.newDialog.title,
