@@ -52,7 +52,7 @@ export const mediaTrackerKeys = {
             lastViewed: "youTube.videos.last_viewed",
             dialogs: {
                 viewDialog: {
-                    title: "youTube.channels.dialogs.view_dialog.title",
+                    title: "youTube.videos.dialogs.view_dialog.title",
                 },
                 newDialog: {
                     title: "youTube.videos.dialogs.new_dialog.title",
