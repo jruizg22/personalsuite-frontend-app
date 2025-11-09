@@ -149,8 +149,8 @@ export default function VideosTab(): JSX.Element {
             )}
 
             /** Renders the video creation/edit form */
-            renderForm={(video: YTVideo, onChange, readOnly): JSX.Element => (
-                <VideoFormFields video={video} onChange={onChange} readOnly={readOnly}/>
+            renderForm={(videoFull: YTVideoFull, onChange, readOnly): JSX.Element => (
+                <VideoFormFields video={videoFull} onChange={onChange} readOnly={readOnly}/>
             )}
 
             /** List of required fields before submission */

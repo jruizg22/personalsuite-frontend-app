@@ -1,11 +1,16 @@
 import {type JSX} from "react";
-import {CardDateField, CardItemContent, CardLinkField, CardTextField} from "@/shared/cards";
+import {CardItemContent} from "@/shared/cards";
 import PersonIcon from "@mui/icons-material/Person";
-import type {YTVideoWithChannel} from "@media-tracker/models";
+import HistoryIcon from "@mui/icons-material/History";
+import type {YTVideoFull} from "@media-tracker/models";
+import DescriptionIcon from "@mui/icons-material/Description";
+import CardField from "@/shared/cards/fields/CardField.tsx";
+import LinkIcon from "@mui/icons-material/Link";
+import EventIcon from "@mui/icons-material/Event";
 
 interface Props {
     /** The YouTube video (with its associated channel) to display */
-    video: YTVideoWithChannel;
+    video: YTVideoFull;
 }
 
 /**
@@ -51,7 +56,8 @@ interface Props {
  *       url: "https://youtube.com/@techexplained",
  *       description: "Technology insights and tutorials",
  *       createdAt: "2020-06-15T00:00:00Z"
- *     }
+ *     },
+ *     visualizations: []
  *   }}
  * />
  * ```
@@ -65,22 +71,67 @@ export default function VideoCardContent({video}: Props): JSX.Element {
         <CardItemContent>
             {/* Channel name with icon */}
             {video.channel.url && (
-                <CardLinkField url={video.channel.url} label={video.channel.name} icon={<PersonIcon/>} underline={false} truncate/>
+                <CardField
+                    field={{
+                        type: "link",
+                        url: video.channel.url,
+                        label: video.channel.name,
+                        truncate: true
+                    }}
+                    icon={<PersonIcon/>}
+                    tooltip={"Prueba de tooltip"}
+                />
             )}
 
             {/* Optional video URL */}
             {video.url && (
-                <CardLinkField url={video.url} truncate/>
+                <CardField
+                    field={{
+                        type: "link",
+                        url: video.url,
+                        truncate: true
+                    }}
+                    icon={<LinkIcon/>}
+                    tooltip={"Prueba de tooltip"}
+                />
             )}
 
             {/* Optional publication date */}
             {video.publishedAt && (
-                <CardDateField date={video.publishedAt}/>
+                <CardField
+                    field={{
+                        type: "date",
+                        date: video.publishedAt
+                    }}
+                    icon={<EventIcon/>}
+                    tooltip={"Prueba de tooltip"}
+                />
+            )}
+
+            {/* Optional last visualization date (shows the most recent record available).
+            Since the API endpoint orders results in ascending order (oldest → newest),
+            we take the last element in the array to display the latest visualization date. */}
+            {video.visualizations.length > 0 && (
+                <CardField
+                    field={{
+                        type: "date",
+                        date: video.visualizations[video.visualizations.length - 1].visualizationDate
+                    }}
+                    icon={<HistoryIcon />}
+                    tooltip={"Prueba de tooltip"}
+                />
             )}
 
             {/* Optional description */}
             {video.description && (
-                <CardTextField text={video.description}/>
+                <CardField
+                    field={{
+                        type: "text",
+                        text: video.description
+                    }}
+                    icon={<DescriptionIcon/>}
+                    tooltip={"Prueba de tooltip"}
+                />
             )}
         </CardItemContent>
     )

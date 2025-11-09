@@ -7,12 +7,12 @@ import MovieIcon from "@mui/icons-material/Movie";
 import {commonKeys} from "@/i18n";
 import {mediaTrackerKeys} from "@media-tracker/i18n/i18nKeys";
 import {AutocompleteField, DateFormField, DescriptionFormField, GeneralTextFormField} from "@/shared/forms/fields";
-import type {YTVideo} from "@media-tracker/models";
+import type {YTVideoFull} from "@media-tracker/models";
 import {useYouTubeContext} from "@media-tracker/contexts";
 
 interface Props {
-    video: YTVideo;
-    onChange: (field: keyof YTVideo, value: string | null) => void;
+    video: YTVideoFull;
+    onChange: (field: keyof YTVideoFull, value: string | null) => void;
     readOnly?: boolean;
 }
 
@@ -25,9 +25,9 @@ interface Props {
  */
 export default function VideoFormFields({ video, onChange, readOnly }: Props): JSX.Element {
     const { t } = useTranslation();
-    const {data} = useYouTubeContext();
+    const {channels} = useYouTubeContext();
 
-    const channelOptions = data.channels.map((ch) => ({
+    const channelOptions = channels.map((ch) => ({
         value: ch.id,
         label: ch.name
     }));
