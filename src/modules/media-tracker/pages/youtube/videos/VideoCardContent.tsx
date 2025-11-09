@@ -7,6 +7,8 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import CardField from "@/shared/cards/fields/CardField.tsx";
 import LinkIcon from "@mui/icons-material/Link";
 import EventIcon from "@mui/icons-material/Event";
+import {useTranslation} from "react-i18next";
+import {commonKeys, mediaTrackerKeys} from "@/i18n";
 
 interface Props {
     /** The YouTube video (with its associated channel) to display */
@@ -67,6 +69,8 @@ interface Props {
  * @returns {JSX.Element} The rendered video card content.
  */
 export default function VideoCardContent({video}: Props): JSX.Element {
+    const {t} = useTranslation();
+
     return (
         <CardItemContent>
             {/* Channel name with icon */}
@@ -79,7 +83,10 @@ export default function VideoCardContent({video}: Props): JSX.Element {
                         truncate: true
                     }}
                     icon={<PersonIcon/>}
-                    tooltip={"Prueba de tooltip"}
+                    tooltip={t(
+                        mediaTrackerKeys.youTube.channels.channel,
+                        {ns: mediaTrackerKeys.ns, defaultValue: "Channel"}
+                    )}
                 />
             )}
 
@@ -92,7 +99,10 @@ export default function VideoCardContent({video}: Props): JSX.Element {
                         truncate: true
                     }}
                     icon={<LinkIcon/>}
-                    tooltip={"Prueba de tooltip"}
+                    tooltip={t(
+                        mediaTrackerKeys.youTube.videos.videoLink,
+                        {ns: mediaTrackerKeys.ns, defaultValue: "Video link"}
+                    )}
                 />
             )}
 
@@ -104,7 +114,10 @@ export default function VideoCardContent({video}: Props): JSX.Element {
                         date: video.publishedAt
                     }}
                     icon={<EventIcon/>}
-                    tooltip={"Prueba de tooltip"}
+                    tooltip={t(
+                        mediaTrackerKeys.youTube.videos.publishedAt,
+                        {ns: mediaTrackerKeys.ns, defaultValue: "Published at"}
+                    )}
                 />
             )}
 
@@ -118,7 +131,10 @@ export default function VideoCardContent({video}: Props): JSX.Element {
                         date: video.visualizations[video.visualizations.length - 1].visualizationDate
                     }}
                     icon={<HistoryIcon />}
-                    tooltip={"Prueba de tooltip"}
+                    tooltip={t(
+                        mediaTrackerKeys.youTube.videos.lastViewed,
+                        {ns: mediaTrackerKeys.ns, defaultValue: "Last viewed"}
+                    )}
                 />
             )}
 
@@ -130,7 +146,9 @@ export default function VideoCardContent({video}: Props): JSX.Element {
                         text: video.description
                     }}
                     icon={<DescriptionIcon/>}
-                    tooltip={"Prueba de tooltip"}
+                    tooltip={t(
+                        commonKeys.description, {defaultValue: "Description"}
+                    )}
                 />
             )}
         </CardItemContent>

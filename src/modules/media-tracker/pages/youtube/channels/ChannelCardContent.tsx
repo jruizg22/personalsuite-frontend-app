@@ -4,6 +4,8 @@ import {CardField, CardItemContent} from "@/shared/cards";
 import LinkIcon from "@mui/icons-material/Link";
 import EventIcon from "@mui/icons-material/Event";
 import DescriptionIcon from "@mui/icons-material/Description";
+import {useTranslation} from "react-i18next";
+import {commonKeys, mediaTrackerKeys} from "@/i18n";
 
 interface Props {
     /** The YouTube channel data to display inside the card */
@@ -26,6 +28,8 @@ interface Props {
  * ```
  */
 export default function ChannelCardContent({channel}: Props): JSX.Element {
+    const {t} = useTranslation();
+
     return (
         <CardItemContent>
             {/* Display the channel URL as a clickable, truncated link */}
@@ -37,7 +41,10 @@ export default function ChannelCardContent({channel}: Props): JSX.Element {
                         truncate: true
                     }}
                     icon={<LinkIcon/>}
-                    tooltip={"Prueba de tooltip"}
+                    tooltip={t(
+                        mediaTrackerKeys.youTube.channels.channelLink,
+                        {ns: mediaTrackerKeys.ns,defaultValue: "Link to channel"}
+                    )}
                 />
             )}
 
@@ -49,7 +56,10 @@ export default function ChannelCardContent({channel}: Props): JSX.Element {
                         date: channel.createdAt
                     }}
                     icon={<EventIcon/>}
-                    tooltip={"Prueba de tooltip"}
+                    tooltip={t(
+                        mediaTrackerKeys.youTube.channels.createdAt,
+                        {ns: mediaTrackerKeys.ns, defaultValue: "Created at"}
+                    )}
                 />
             )}
 
@@ -61,7 +71,9 @@ export default function ChannelCardContent({channel}: Props): JSX.Element {
                         text: channel.description
                     }}
                     icon={<DescriptionIcon/>}
-                    tooltip={"Prueba de tooltip"}
+                    tooltip={t(
+                        commonKeys.description, {defaultValue: "Description"}
+                    )}
                 />
             )}
         </CardItemContent>
