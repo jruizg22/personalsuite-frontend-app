@@ -20,6 +20,7 @@ export const mediaTrackerKeys = {
             channel: "youTube.channels.channel",
             createdAt: "youTube.channels.created_at",
             searchChannels: "youTube.channels.search_channels",
+            channelLink: "youTube.channels.channel_link",
             dialogs: {
                 viewDialog: {
                     title: "youTube.channels.dialogs.view_dialog.title",
@@ -47,6 +48,8 @@ export const mediaTrackerKeys = {
             video: "youTube.videos.video",
             publishedAt: "youTube.videos.published_at",
             searchVideos: "youTube.videos.search_videos",
+            videoLink: "youTube.videos.video_link",
+            lastViewed: "youTube.videos.last_viewed",
             dialogs: {
                 viewDialog: {
                     title: "youTube.channels.dialogs.view_dialog.title",

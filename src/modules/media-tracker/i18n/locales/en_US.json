@@ -8,6 +8,7 @@
       "channel": "Channel",
       "created_at": "Created at",
       "search_channels": "Search channels...",
+      "channel_link": "Link to channel",
       "dialogs": {
         "view_dialog": {
           "title": "Channel details"
@@ -35,6 +36,8 @@
       "title": "Title",
       "published_at": "Published at",
       "search_videos": "Search videos...",
+      "video_link": "Video link",
+      "last_viewed": "Last viewed",
       "dialogs": {
         "view_dialog": {
           "title": "Video details"
